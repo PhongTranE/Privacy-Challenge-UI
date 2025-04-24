@@ -1,0 +1,107 @@
+.hero-section {
+  width: 100%;
+  /* Adjust height based on header height */
+  height: 100vh;
+  background: url("../assets/bgg.jpg") no-repeat center center/cover; /* Replace 'your-food-image.jpg' with your image file */
+  display: flex;
+  justify-content: flex-start; /* Align content to the left */
+  align-items: center; /* Center content vertically */
+  padding-left: 10%; /* Add some padding on the left */
+  box-sizing: border-box;
+  position: relative;
+  /* Add padding-top to prevent content from being hidden by the fixed header */
+  padding-top: 60px;
+
+  .hero-content {
+    margin-top: -10%;
+    max-width: 620px;
+    color: #fff; /* White text for better contrast on background */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a subtle text shadow */
+
+    h1 {
+      font-size: 3em;
+      margin: 0 0 20px 0;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 1em;
+      font-weight: 700;
+      color: #ff8c00; /* Orange color from the image */
+      margin-bottom: 10px;
+    }
+
+    .description {
+      font-size: 1.1em;
+      margin-bottom: 30px;
+      line-height: 1.6;
+
+      &__strong{
+        color:#b47426;
+      }
+
+      &__strong:hover {
+        color: #ff8c00;
+      }
+    }
+  }
+
+  .btn {
+    display: inline-block;
+    background-color: #ff8c00;
+    color: #fff;
+    padding: 12px 25px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn:hover {
+    background-color: #e07b00; /* Darker orange on hover */
+  }
+}
+
+/* Basic Responsive adjustments */
+@media (max-width: 768px) {
+  .site-header {
+    flex-direction: column; /* Stack logo and nav vertically */
+    height: auto; /* Auto height for stacked items */
+    padding: 10px 5%;
+  }
+
+  .site-nav ul {
+    margin-top: 10px;
+    justify-content: center; /* Center nav items */
+  }
+
+  .site-nav li {
+    margin: 0 10px; /* Adjust spacing */
+  }
+
+  .hero-section {
+    justify-content: center; /* Center content on smaller screens */
+    padding-left: 0;
+    /* Adjust padding-top for the taller header */
+    padding-top: 80px; /* Adjust based on stacked header height */
+    height: calc(100vh - 80px); /* Adjust height */
+  }
+
+  .hero-content {
+    padding-left: 5%;
+    padding-right: 5%;
+    max-width: 90%;
+    text-align: center;
+  }
+
+  .hero-content h1 {
+    font-size: 2em;
+  }
+
+  .description {
+    font-size: 1em;
+  }
+}
