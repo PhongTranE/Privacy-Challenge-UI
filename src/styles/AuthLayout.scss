@@ -1,0 +1,29 @@
+.authen {
+  &-section {
+    width: 100%;
+    /* Adjust height based on header height */
+    height: 100vh;
+    background: url("../assets/bgg.jpg") no-repeat center center/cover; /* Replace 'your-food-image.jpg' with your image file */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    padding-top: 100px;
+  }
+  &-icon{
+    color: #fff;
+    border-radius: 50%;
+  }
+
+  &-form {
+    background: #202322de;
+    color: #fff;
+
+    &__register{
+      height: 630px;
+      overflow-y: scroll;
+    }
+  }
+}

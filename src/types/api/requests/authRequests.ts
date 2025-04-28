@@ -5,6 +5,8 @@ export interface RegisterRequestBody {
     password: string;
     confirmPassword: string;
     email: string;
+    group_name: string;
+    invite_key: string;
 }
 
 export interface LoginRequestBody {
