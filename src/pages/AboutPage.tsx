@@ -16,17 +16,18 @@ const AboutPage: React.FC = () => {
               anonymization of tabular data, geolocation and timestamping.
             </Text>
             <br />
+            <Text size="lg">It takes place in two phases:</Text>
             <Text size="lg">
-              It takes place in two phases. In the first phase, the different
-              teams will try to anonymise the data provided as best they can.
-              Then, during the second phase, the teams will try to re-identify
-              as much data as possible anonymized by the other teams during the
-              first phase.
+              - In the first phase, the different teams will try to anonymise
+              the data provided as best they can.
+              <br />- During the second phase, the teams will try to
+              re-identify as much data as possible anonymized by the other teams
+              during the first phase.
             </Text>
             <br />
             <Text size="lg">
               Each team will thus obtain an attack score following the
-              reidentification and a specific defense score will be deducted
+              re-identification and a specific defense score will be deducted
               from the attack scores of the different teams for each anonymized
               dataset; This will allow us to establish a ranking.
             </Text>
