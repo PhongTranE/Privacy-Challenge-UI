@@ -1,20 +1,23 @@
 // Type for authentication related responses
-import { UserInterface } from '@/types/common/userTypes';
+import { UserInterface } from "@/types/common/userTypes";
 
 export interface RegisterResponseData {
-    user: UserInterface
+  user: UserInterface;
 }
 
 export interface LoginResponseData {
-    accessToken: string;
-    user: UserInterface
+  accessToken: string;
+  user: UserInterface;
 }
 
 export interface RefreshTokenResponseData {
-    accessToken: string;
+  accessToken: string;
 }
 
 export interface MeResponseData {
-    user: UserInterface;
+  user: UserInterface;
 }
 
+export type ForgotPasswordResponseData = null;
+
+export type ResetPasswordResponseData = null;

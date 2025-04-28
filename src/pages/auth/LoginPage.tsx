@@ -51,7 +51,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Paper radius="md" p="xl" className="authen-form">
+    <Paper radius="md" p="xl" className="authen-form authen-form__login">
       <Text size="lg" fw={500} ta="center">
         Log in to your account
       </Text>

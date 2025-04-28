@@ -1,27 +1,27 @@
 // Type for authentication related requests
 
 export interface RegisterRequestBody {
-    username: string;
-    password: string;
-    confirmPassword: string;
-    email: string;
-    group_name: string;
-    invite_key: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+  email: string;
+  group_name: string;
+  invite_key: string;
 }
 
 export interface LoginRequestBody {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }
 
 export interface ForgotPasswordRequestBody {
-    email: string;
+  email: string;
 }
 
 export interface ResetPasswordRequestBody {
-    newpassword: string;
+  new_password: string;
 }
 
 export interface ResendActivationEmailRequestBody {
-    email: string
+  email: string;
 }

@@ -10,9 +10,9 @@
     align-items: center;
     box-sizing: border-box;
     position: relative;
-    padding-top: 100px;
+    padding: 100px 10px 10px;
   }
-  &-icon{
+  &-icon {
     color: #fff;
     border-radius: 50%;
   }
@@ -20,10 +20,20 @@
   &-form {
     background: #202322de;
     color: #fff;
+    padding: 10px;
 
-    &__register{
+    &__register {
       height: 630px;
-      overflow-y: scroll;
+      overflow-y: auto;
+    }
+
+    &__login {
+      height: 470px;
+      overflow-y: auto;
+    }
+
+    &__forgot-pasword {
+      min-width: 30%;
     }
   }
 }

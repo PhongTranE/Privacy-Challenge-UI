@@ -4,7 +4,7 @@ import { LINKS } from "@/constants/links";
 import { Loader } from "@mantine/core";
 import AuthLayout from "@/layouts/AuthLayout";
 import EmailActionLayout from "@/layouts/EmailActionLayout";
-import ProtectedRoutes from "./ProtectedRoutes";
+// import ProtectedRoutes from "./ProtectedRoutes";
 import AppLayout from "@/layouts/AppLayout";
 
 // const AppLayout = lazy(() => import('@/layouts/AppLayout'));
@@ -14,11 +14,16 @@ const AboutPage = lazy(() => import("@/pages/AboutPage"));
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
 const RegisterPage = lazy(() => import("@/pages/auth/RegisterPage"));
 const ActivationPage = lazy(() => import("@/pages/auth/email/ActivationPage"));
+const ForgotPasswordPage = lazy(
+  () => import("@/pages/auth/ForgotPasswordPage")
+);
+const ResetPasswordEmailPage = lazy(
+  () => import("@/pages/auth/email/ResetPasswordEmailPage")
+);
 const ResultActivationPage = lazy(
   () => import("@/pages/auth/email/ResultActivationPage")
 );
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
-// const ResetPasswordEmailPage = lazy(() => import('@/pages/email/ResetPasswordEmailPage'));
 
 const AppRoutes: React.FC = () => {
   return (
@@ -29,17 +34,20 @@ const AppRoutes: React.FC = () => {
           <Route path={LINKS.HOME} element={<HomePage />} />
           <Route path={LINKS.RULE} element={<RulesPage />} />
           <Route path={LINKS.ABOUT} element={<AboutPage />} />
-        </Route>
-        {/* Auth routes */}
-        <Route path={LINKS.AUTH} element={<AuthLayout />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
+
+          {/* AuthLayout route */}
+          <Route path={LINKS.AUTH} element={<AuthLayout />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          </Route>
         </Route>
 
+          {/* EmailActionLayout route */}
         <Route path={LINKS.EMAIL} element={<EmailActionLayout />}>
           <Route path="verify-account" element={<ActivationPage />} />
           <Route path="activate" element={<ResultActivationPage />} />
-          {/* <Route path="reset-password" element={<ResetPasswordEmailPage />} /> */}
+          <Route path="reset-password" element={<ResetPasswordEmailPage />} />
         </Route>
 
         {/* 404 */}
