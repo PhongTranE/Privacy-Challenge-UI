@@ -1,6 +1,7 @@
 import "@/styles/HomePage.scss";
 import { NavLink } from "react-router-dom";
 import { LINKS } from "@/constants/links";
+import { Tooltip } from "@mantine/core";
 const HomePage: React.FC = () => {
   return (
     <>
@@ -17,9 +18,19 @@ const HomePage: React.FC = () => {
               </strong>
               carefully before register!
             </p>
-            <button className="btn">
-              <NavLink to={LINKS.REGISTER}>Register</NavLink>
-            </button>
+            <Tooltip
+              label="Remember to copy your invite key on the Rules page!"
+              position="right"
+              offset={17}
+              withArrow
+              color="rgba(186, 146, 99, 1)"
+              arrowSize={8}
+              transitionProps={{ transition: "fade-right", duration: 300 }}
+            >
+              <button className="btn">
+                <NavLink to={LINKS.REGISTER}>Register</NavLink>
+              </button>
+            </Tooltip>
           </div>
         </div>
       </main>
