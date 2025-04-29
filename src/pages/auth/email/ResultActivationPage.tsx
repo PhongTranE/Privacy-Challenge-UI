@@ -45,7 +45,7 @@ export default function ResultActivationPage() {
         <Loader color="blue" />
     ) : (
         <>
-        <Text ta="center" size="sm" c="dimmed">
+        <Text ta="center" size="sm" c="white">
             {status === "success"
             ? "Your account has been successfully activated. You may now log in."
             : status === "error"

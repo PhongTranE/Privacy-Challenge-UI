@@ -3,12 +3,17 @@ export const LINKS = {
   RULE: "/rules",
   ABOUT: "/about",
   KEY: "/key",
+
   AUTH: "/auth",
-  EMAIL: "/email",
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
-  VERIFY_ACCOUNT: "/email/verify-account",
   FORGOT_PASSWORD: "/auth/forgot-password",
+
+  EMAIL: "/email",
+  VERIFY_ACCOUNT: "/email/verify-account",
   RESET_PASSWORD: "/email/reset-password",
+  
+  PROFILE: "/me",
+  CHANGE_PASSWORD: "/me/change-password",
   NOT_FOUND: "*",
 } as const;

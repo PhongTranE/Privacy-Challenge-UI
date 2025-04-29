@@ -1,0 +1,21 @@
+.email {
+  &-section {
+    width: 100%;
+    /* Adjust height based on header height */
+    height: 100vh;
+    background: url("../assets/bgg.jpg") no-repeat center center/cover; /* Replace 'your-food-image.jpg' with your image file */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    padding: 100px 10px 10px;
+  }
+
+  &-modal {
+    background: #202322de;
+    color: #fff;
+    padding: 10px;
+  }
+}

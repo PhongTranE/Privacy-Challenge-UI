@@ -46,7 +46,7 @@ export default function ActivationPage() {
     <Stack align="center" gap="xs">
       <Title order={3}>Verify your email address</Title>
 
-      <Text ta="center" size="sm" c="dimmed">
+      <Text ta="center" size="sm" c="#ffffffb0">
         <strong>Please click on the link</strong> in the email we just sent you
         to confirm your email address.
       </Text>
@@ -55,7 +55,7 @@ export default function ActivationPage() {
         isPending ? (
           <Loader color="blue" />
         ) : cooldown > 0 ? (
-          <Text size="sm" c="dimmed">Resend in {formatTime(cooldown)}</Text>
+          <Text size="sm" c="ffffffb0">Resend in {formatTime(cooldown)}</Text>
         ) : (
           <Anchor onClick={handleResend} c="blue" size="sm">
             Resend Email

@@ -1,29 +1,29 @@
-import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
-import { LINKS } from "@/constants/links";
-import { Loader } from "@mantine/core";
-import AuthLayout from "@/layouts/AuthLayout";
-import EmailActionLayout from "@/layouts/EmailActionLayout";
+import { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { LINKS } from '@/constants/links';
+import { Loader } from '@mantine/core';
+import AuthLayout from '@/layouts/AuthLayout';
+import EmailActionLayout from '@/layouts/EmailActionLayout';
 // import ProtectedRoutes from "./ProtectedRoutes";
-import AppLayout from "@/layouts/AppLayout";
+import AppLayout from '@/layouts/AppLayout';
 
 // const AppLayout = lazy(() => import('@/layouts/AppLayout'));
-const HomePage = lazy(() => import("@/pages/HomePage"));
-const RulesPage = lazy(() => import("@/pages/RulesPage"));
-const AboutPage = lazy(() => import("@/pages/AboutPage"));
-const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
-const RegisterPage = lazy(() => import("@/pages/auth/RegisterPage"));
-const ActivationPage = lazy(() => import("@/pages/auth/email/ActivationPage"));
+const HomePage = lazy(() => import('@/pages/HomePage'));
+const RulesPage = lazy(() => import('@/pages/RulesPage'));
+const AboutPage = lazy(() => import('@/pages/AboutPage'));
+const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
+const ActivationPage = lazy(() => import('@/pages/auth/email/ActivationPage'));
 const ForgotPasswordPage = lazy(
-  () => import("@/pages/auth/ForgotPasswordPage")
+  () => import('@/pages/auth/ForgotPasswordPage')
 );
 const ResetPasswordEmailPage = lazy(
-  () => import("@/pages/auth/email/ResetPasswordEmailPage")
+  () => import('@/pages/auth/email/ResetPasswordEmailPage')
 );
 const ResultActivationPage = lazy(
-  () => import("@/pages/auth/email/ResultActivationPage")
+  () => import('@/pages/auth/email/ResultActivationPage')
 );
-const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 const AppRoutes: React.FC = () => {
   return (
@@ -37,17 +37,17 @@ const AppRoutes: React.FC = () => {
 
           {/* AuthLayout route */}
           <Route path={LINKS.AUTH} element={<AuthLayout />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+            <Route path='login' element={<LoginPage />} />
+            <Route path='register' element={<RegisterPage />} />
+            <Route path='forgot-password' element={<ForgotPasswordPage />} />
           </Route>
-        </Route>
 
           {/* EmailActionLayout route */}
-        <Route path={LINKS.EMAIL} element={<EmailActionLayout />}>
-          <Route path="verify-account" element={<ActivationPage />} />
-          <Route path="activate" element={<ResultActivationPage />} />
-          <Route path="reset-password" element={<ResetPasswordEmailPage />} />
+          <Route path={LINKS.EMAIL} element={<EmailActionLayout />}>
+            <Route path='verify-account' element={<ActivationPage />} />
+            <Route path='activate' element={<ResultActivationPage />} />
+            <Route path='reset-password' element={<ResetPasswordEmailPage />} />
+          </Route>
         </Route>
 
         {/* 404 */}
