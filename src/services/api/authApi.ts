@@ -79,8 +79,20 @@ export const resetPassword = async (
   resetPasswordData: ResetPasswordRequestBody
 ): Promise<APIResponse<null>> => {
   const res = await axios.post<APIResponse<null>>(
-    `email/reset-password/${token}`,
+    `auth/reset-password/${token}`,
     resetPasswordData
+  );
+  return res.data;
+};
+
+export const checkGroup = async (
+  groupName: string
+): Promise<APIResponse<{ group: string }>> => {
+  const res = await axios.get<APIResponse<{ group: string }>>(
+    "auth/check-group",
+    {
+      params: { name: groupName }, // adds ?name=groupName to URL
+    }
   );
   return res.data;
 };
