@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { LINKS } from "@/constants/links";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginInput } from "@/utils/validations/authValidations";
 import { useLogin } from "@/hooks/api/useLogin";
@@ -29,7 +29,8 @@ const LoginPage: React.FC = () => {
     mode: "onTouched",
   });
 
-  const { mutate: login, isPending } = useLogin();
+  const { mutate: login, isPending, isSuccess } = useLogin();
+  const navigate = useNavigate();
 
   // const onSubmit = async (data: LoginInput) => {
   //   try {
@@ -49,6 +50,12 @@ const LoginPage: React.FC = () => {
   const onSubmit = (data: LoginInput) => {
     login(data);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate(LINKS.PROFILE, { replace: true });
+    }
+  }, [isSuccess, navigate]);
 
   return (
     <Paper radius="md" p="xl" className="authen-form authen-form__login">

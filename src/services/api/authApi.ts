@@ -49,7 +49,7 @@ export const resendActivationEmail = async (
   email: ResendActivationEmailRequestBody
 ): Promise<APIResponse<null>> => {
   const response = await axios.post<APIResponse<null>>(
-    "auth/resend_activation",
+    "auth/resend-activation",
     email
   );
   return response.data;

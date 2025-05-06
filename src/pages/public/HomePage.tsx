@@ -1,4 +1,4 @@
-import "@/styles/HomePage.scss";
+import "@/styles/Pages/Public/HomePage.scss";
 import { NavLink } from "react-router-dom";
 import { LINKS } from "@/constants/links";
 import { Tooltip } from "@mantine/core";
@@ -19,7 +19,7 @@ const HomePage: React.FC = () => {
               carefully before register!
             </p>
             <Tooltip
-              label="Remember to copy your invite key on the Rules page!"
+              label="Registration requires an invite key provided by the organizers."
               position="right"
               offset={17}
               withArrow

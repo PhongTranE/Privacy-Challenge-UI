@@ -1,4 +1,4 @@
-import "@/styles/RulesPage.scss";
+import "@/styles/Pages/Public/RulesPage.scss";
 import { Button, CopyButton, Divider, Text } from "@mantine/core";
 
 const RulesPage: React.FC = () => {

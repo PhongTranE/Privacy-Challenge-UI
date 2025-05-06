@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "@/styles/Components/Header.scss";
+import { useAuthStore } from "@/stores/authStore";
+import { Menu } from "@mantine/core";
+import { IconUserCircle } from "@tabler/icons-react";
+import { LINKS } from "@/constants/links";
 const Header: React.FC = () => {
+  const { isAuthenticated, user, unauthenticate } = useAuthStore();
   const [isScrolled, setIsScrolled] = useState(false);
 
   const handleScroll = () => {
@@ -26,25 +31,83 @@ const Header: React.FC = () => {
         </div>
         <nav className="nav">
           <ul>
+            {!isAuthenticated ? (
+              <li>
+                <NavLink to="/">Home</NavLink>
+              </li>
+            ) : (
+              <>
+                {user?.roles[0].name === "admin" ? (
+                  <li>
+                    <NavLink to={LINKS.DASHBOARD}>Dashboard</NavLink>
+                  </li>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
             <li>
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/ranking">Ranking</NavLink>
             </li>
-            <li>
+            {isAuthenticated && (
+              <>
+                <li>
+                  <NavLink to={LINKS.START}>Let's start!</NavLink>
+                </li>
+                <li>
+                  <NavLink to={LINKS.SUBMISSION}>Submission</NavLink>
+                </li>
+                <li>
+                  <NavLink to={LINKS.ATTACK}>Attack</NavLink>
+                </li>
+              </>
+            )}
+            <li className="ml-auto">
               <NavLink to="/rules">Rules</NavLink>
             </li>
             <li>
               <NavLink to="/about">About</NavLink>
             </li>
+            {isAuthenticated && (
+              <>
+                <li>
+                  <NavLink to="/anonymisation/submission">Submission</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/attack/submission">Attack</NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
-        <ul className="authen">
-          <li>
-            <NavLink to="/auth/login">Login</NavLink>
-          </li>
-          <li>
-            <NavLink to="/auth/register">Register</NavLink>
-          </li>
-        </ul>
+        {/* Authen */}
+        {!isAuthenticated ? (
+          <ul className="authen">
+            <li>
+              <NavLink to="/auth/login">Login</NavLink>
+            </li>
+            <li>
+              <NavLink to="/auth/register">Register</NavLink>
+            </li>
+          </ul>
+        ) : (
+          <Menu shadow="md" width={180}>
+            <Menu.Target>
+              <IconUserCircle size={28} />
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item component={Link} to={LINKS.PROFILE}>
+                Profile
+              </Menu.Item>
+              <Menu.Item component={Link} to={LINKS.CHANGE_PASSWORD}>
+                Change Password
+              </Menu.Item>
+              <Menu.Item color="red" onClick={unauthenticate}>
+                Logout
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        )}
       </div>
     </header>
   );

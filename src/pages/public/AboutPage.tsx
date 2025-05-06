@@ -1,4 +1,4 @@
-import "@/styles/AboutPage.scss";
+import "@/styles/Pages/Public/AboutPage.scss";
 import { Divider, Text } from "@mantine/core";
 
 const AboutPage: React.FC = () => {

@@ -28,16 +28,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    column-gap: 50px;
   }
 
-  .logo a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.5em;
-    font-weight: bold;
+  .logo {
+    padding-right: 50px;
+
+    a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
   }
 
   .nav {
+    flex: 1;
     ul {
       list-style: none;
       margin: 0;

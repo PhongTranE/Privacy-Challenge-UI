@@ -2,7 +2,7 @@
   width: 100%;
   /* Adjust height based on header height */
   height: 100vh;
-  background: url("../assets/bgg.jpg") no-repeat center center/cover; /* Replace 'your-food-image.jpg' with your image file */
+  background: url("@/assets/bgg.jpg") no-repeat center center/cover; /* Replace 'your-food-image.jpg' with your image file */
   display: flex;
   justify-content: flex-start; /* Align content to the left */
   align-items: center; /* Center content vertically */

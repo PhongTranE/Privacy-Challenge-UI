@@ -1,8 +1,10 @@
 export const LINKS = {
   HOME: "/",
+  RANKING: "/ranking",
   RULE: "/rules",
   ABOUT: "/about",
-  KEY: "/key",
+
+  START: "/start", //Replace the home section after successful login check
 
   AUTH: "/auth",
   LOGIN: "/auth/login",
@@ -12,8 +14,17 @@ export const LINKS = {
   EMAIL: "/email",
   VERIFY_ACCOUNT: "/email/verify-account",
   RESET_PASSWORD: "/email/reset-password",
-  
-  PROFILE: "/me",
+
+  //Ano and Attack
+  SUBMISSION: "/anonymisation/submission",
+  ATTACK: "/attack/submission",
+
+  //Admin
+  DASHBOARD: "/admin/dashboard",
+
+  //Profile
+  PROFILE: "/me/profile",
   CHANGE_PASSWORD: "/me/change-password",
+
   NOT_FOUND: "*",
 } as const;
