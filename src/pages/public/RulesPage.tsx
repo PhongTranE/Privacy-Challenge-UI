@@ -1,79 +1,77 @@
+import Introduction from "@/components/ruleSection/Introduction";
+import Phase1 from "@/components/ruleSection/Phase1";
+import Phase2 from "@/components/ruleSection/Phase2";
+import RankingAndScore from "@/components/ruleSection/RankingAndScore";
 import "@/styles/Pages/Public/RulesPage.scss";
-import { Button, CopyButton, Divider, Text } from "@mantine/core";
+import { Button, Container, Group, Paper, ScrollArea } from "@mantine/core";
+import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react";
+import { useState } from "react";
 
 const RulesPage: React.FC = () => {
-  interface RulesSection {
-    id: number;
-    title: string;
-    link: string;
-  }
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const ruleSections: RulesSection[] = [
-    {
-      id: 1,
-      title: "Introduction",
-      link: "https://docs.google.com/document/d/e/2PACX-1vRCWk6yIxzfylhms5PVVGnGkzW4l4UbpejnyhaFrqfMRKfQpZzdSb75_ObW4iBnJ8vGx16uDDncBJ1k/pub",
-    },
-    {
-      id: 2,
-      title: "Phase 1: Anonymiation",
-      link: "https://docs.google.com/document/d/e/2PACX-1vRCWk6yIxzfylhms5PVVGnGkzW4l4UbpejnyhaFrqfMRKfQpZzdSb75_ObW4iBnJ8vGx16uDDncBJ1k/pub",
-    },
-    {
-      id: 3,
-      title: "Phase 2: Attack on anonymized data",
-      link: "https://docs.google.com/document/d/e/2PACX-1vRCWk6yIxzfylhms5PVVGnGkzW4l4UbpejnyhaFrqfMRKfQpZzdSb75_ObW4iBnJ8vGx16uDDncBJ1k/pub",
-    },
-    {
-      id: 4,
-      title: "Ranking and Score",
-      link: "https://docs.google.com/document/d/e/2PACX-1vRCWk6yIxzfylhms5PVVGnGkzW4l4UbpejnyhaFrqfMRKfQpZzdSb75_ObW4iBnJ8vGx16uDDncBJ1k/pub",
-    },
+  const handlePrevious = () => {
+    setActiveIndex((current) => (current > 1 ? current - 1 : 0));
+  };
+
+  const handleNext = () => {
+    setActiveIndex((current) => (current < 4 ? current + 1 : 4));
+  };
+
+  const ruleTitles = [
+    "Introduction",
+    "Phase 1: Anonymization",
+    "Phase 2: Attack on anonymized data",
+    "Ranking and Score",
+  ];
+  const ruleComponents = [
+    <Introduction />,
+    <Phase1 />,
+    <Phase2 />,
+    <RankingAndScore />,
   ];
 
   return (
     <>
-      <main className="flex h-screen flex-col items-center justify-center">
-        <section className="rules-section">
-          <div className="rules-content">
-            <Text fw={700} size="xl" c="#ff8c00">
-              Contest Rules
-            </Text>
-            <Divider my="lg" />
-            <Text size="xs" c="#CCCCCC">
-              Select a section below to read the rules.
-            </Text>
-            <ul className="rules__list">
-              {ruleSections.map((section) => (
-                <li key={section.id} className="rules__item">
-                  <a
-                    href={section.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rules__link"
-                  >
-                    {section.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <Divider my="lg" />
-            <div className="wrap-key">
-              <Text size="xs" c="#FFBF00" fw={700}>
-                Please copy the key on the right before proceeding to the registration
-                page.
-              </Text>
-              <CopyButton value="https://mantine.dev">
-                {({ copied, copy }) => (
-                  <Button color={copied ? "teal" : "blue"} onClick={copy}>
-                    {copied ? "Copied key" : "Copy key"}
-                  </Button>
-                )}
-              </CopyButton>
-            </div>
-          </div>
-        </section>
-      </main>
+      <Container size="lg" pt="xl">
+        <Group className="pt-20" gap="xs" wrap="wrap">
+          {ruleTitles.map((title, index) => (
+            <Button
+              key={index}
+              variant={activeIndex === index ? "filled" : "outline"}
+              color="#ff8c00"
+              size="xs"
+              onClick={() => setActiveIndex(index)}
+            >
+              {title}
+            </Button>
+          ))}
+        </Group>
+        <Paper bg="#060606e6" shadow="xs" p="md" radius="md">
+          <ScrollArea h={500}>{ruleComponents[activeIndex]}</ScrollArea>
+        </Paper>
+
+        <Group justify="space-between">
+          <Button
+            size="xs"
+            leftSection={<IconArrowNarrowLeft stroke={1} />}
+            color="#ff8c00"
+            onClick={handlePrevious}
+            disabled={activeIndex === 0}
+          >
+            Previous
+          </Button>
+          <Button
+            size="xs"
+            rightSection={<IconArrowNarrowRight stroke={1} />}
+            color="#ff8c00"
+            onClick={handleNext}
+            disabled={activeIndex === 3}
+          >
+            Next
+          </Button>
+        </Group>
+      </Container>
     </>
   );
 };
