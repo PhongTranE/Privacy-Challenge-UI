@@ -4,9 +4,8 @@ import { LINKS } from "@/constants/links";
 import { Tooltip } from "@mantine/core";
 const HomePage: React.FC = () => {
   return (
-    <>
-      <main className="flex h-screen flex-col items-center justify-center gap-y-4">
-        <div className="hero-section">
+      <main>
+        <section className="hero-section">
           <div className="hero-content">
             <p className="subtitle">Unleash Your Potential</p>
             <h1>Privacy Challenge Platform</h1>
@@ -32,9 +31,8 @@ const HomePage: React.FC = () => {
               </button>
             </Tooltip>
           </div>
-        </div>
+        </section>
       </main>
-    </>
   );
 };
 

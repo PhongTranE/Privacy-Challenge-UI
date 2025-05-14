@@ -1,94 +1,109 @@
 .header {
   position: fixed;
-  top: 0;
-  z-index: 10;
-  width: 100%;
-  background-color: #222;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: calc(100% - 40px);
+  max-width: 1200px;
+  background-color: #000;
   color: white;
-  padding: 15px 0;
-  box-shadow: none;
-  /* Hiệu ứng chuyển đổi cho các thuộc tính thay đổi (ví dụ background-color, box-shadow, padding) */
-  transition: background-color 0.3s ease, box-shadow 0.3s ease,
-    padding 0.3s ease;
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
   display: flex;
   justify-content: center;
   align-items: center;
 
   &.scrolled {
-    background-color: #222;
-    color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    padding: 10px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
   &-container {
-    width: 100%;
-    max-width: 1200px;
-    padding: 0 20px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    column-gap: 50px;
+    justify-content: space-between;
+    flex: 1;
+    gap: 40px;
   }
 
   .logo {
-    padding-right: 50px;
-
     a {
       color: white;
       text-decoration: none;
-      font-size: 1.5em;
-      font-weight: bold;
+      font-size: 1.3rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
   }
 
   .nav {
     flex: 1;
+
     ul {
       list-style: none;
       margin: 0;
       padding: 0;
       display: flex;
-      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
     }
 
     a {
       color: white;
       text-decoration: none;
-      padding: 5px 0;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.85rem;
+      padding: 6px 0;
       position: relative;
 
       &.active {
-        font-weight: bold;
         border-bottom: 2px solid white;
       }
 
       &:hover {
-        opacity: 0.8;
+        opacity: 0.85;
       }
     }
   }
+
   .authen {
-    list-style: none;
-    margin: 0;
-    padding: 0;
     display: flex;
+    align-items: center;
     gap: 20px;
 
     a {
-      color: white;
+      background-color: white;
+      color: black;
+      padding: 6px 14px;
+      border-radius: 1rem;
+      font-weight: bold;
+      font-size: 0.8rem;
+      text-transform: uppercase;
       text-decoration: none;
-      padding: 5px 0;
-      position: relative;
-
-      &.active {
-        font-weight: bold;
-        border-bottom: 2px solid white;
-      }
+      transition: background-color 0.2s;
 
       &:hover {
-        opacity: 0.8;
+        background-color: #eee;
       }
+
+      &.active {
+        outline: 2px solid white;
+      }
+    }
+  }
+
+  svg {
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.8;
     }
   }
 }

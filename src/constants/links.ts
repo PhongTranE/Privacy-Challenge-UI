@@ -13,6 +13,7 @@ export const LINKS = {
 
   EMAIL: "/email",
   VERIFY_ACCOUNT: "/email/verify-account",
+  RESEND_ACTIVATE: "/email/resend-activation",
   RESET_PASSWORD: "/email/reset-password",
 
   //Ano and Attack

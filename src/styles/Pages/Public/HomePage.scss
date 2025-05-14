@@ -1,22 +1,19 @@
 .hero-section {
   width: 100%;
-  /* Adjust height based on header height */
   height: 100vh;
-  background: url("@/assets/bgg.jpg") no-repeat center center/cover; /* Replace 'your-food-image.jpg' with your image file */
   display: flex;
-  justify-content: flex-start; /* Align content to the left */
-  align-items: center; /* Center content vertically */
-  padding-left: 10%; /* Add some padding on the left */
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 15%;
   box-sizing: border-box;
   position: relative;
-  /* Add padding-top to prevent content from being hidden by the fixed header */
   padding-top: 60px;
 
   .hero-content {
     margin-top: -10%;
     max-width: 620px;
-    color: #fff; /* White text for better contrast on background */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a subtle text shadow */
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 
     h1 {
       font-size: 3em;
@@ -28,7 +25,7 @@
     .subtitle {
       font-size: 1em;
       font-weight: 700;
-      color: #ff8c00; /* Orange color from the image */
+      color: #ff8c00;
       margin-bottom: 10px;
     }
 
@@ -37,8 +34,8 @@
       margin-bottom: 30px;
       line-height: 1.6;
 
-      &__strong{
-        color:#b47426;
+      &__strong {
+        color: #b47426;
       }
 
       &__strong:hover {
@@ -61,11 +58,10 @@
   }
 
   .btn:hover {
-    background-color: #e07b00; /* Darker orange on hover */
+    background-color: #e07b00;
   }
 }
 
-/* Basic Responsive adjustments */
 @media (max-width: 768px) {
   .site-header {
     flex-direction: column; /* Stack logo and nav vertically */

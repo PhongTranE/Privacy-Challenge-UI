@@ -197,7 +197,7 @@ const RegisterPage: React.FC = () => {
           <TextInput
             required
             label="Invite Key"
-            placeholder="KMA-01"
+            placeholder="abc123"
             {...register("invite_key", {
               required: "Invite Key is required",
             })}

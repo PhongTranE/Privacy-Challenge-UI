@@ -2,10 +2,15 @@ import { LINKS } from "@/constants/links";
 import { useAuthStore } from "@/stores/authStore";
 import { Button } from "@mantine/core";
 import { IconLogout2 } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NotFoundPage = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(-1);
+  };
   return (
     <main className="grid h-screen place-content-center px-4 text-center space-y-4">
       <h1 className="text-base-content tracking-widest uppercase text-2xl">
@@ -14,14 +19,13 @@ const NotFoundPage = () => {
 
       {isAuthenticated ? (
         <Button
-          component={Link}
-          to={LINKS.START}
+          onClick={handleClick}
           radius="md"
           variant="outline"
           color="blue"
           leftSection={<IconLogout2 size={16} />}
         >
-          Back to Home
+          Return
         </Button>
       ) : (
         <Button

@@ -2,7 +2,6 @@ import Introduction from "@/components/ruleSection/Introduction";
 import Phase1 from "@/components/ruleSection/Phase1";
 import Phase2 from "@/components/ruleSection/Phase2";
 import RankingAndScore from "@/components/ruleSection/RankingAndScore";
-import "@/styles/Pages/Public/RulesPage.scss";
 import { Button, Container, Group, Paper, ScrollArea } from "@mantine/core";
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react";
 import { useState } from "react";

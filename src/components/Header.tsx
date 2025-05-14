@@ -27,7 +27,15 @@ const Header: React.FC = () => {
     <header className={`header ${isScrolled ? "scrolled" : ""}`}>
       <div className="header-container">
         <div className="logo">
-          <Link to="/">PCP</Link>
+          <Link
+            to={`${
+              user?.roles[0].name === "Administrator"
+                ? "/admin/dashboard"
+                : `${user?.roles[0].name === "User" ? "/start" : "/"}`
+            }`}
+          >
+            PCP
+          </Link>
         </div>
         <nav className="nav">
           <ul>
@@ -37,12 +45,10 @@ const Header: React.FC = () => {
               </li>
             ) : (
               <>
-                {user?.roles[0].name === "admin" ? (
+                {user?.roles[0].name === "Administrator" && (
                   <li>
                     <NavLink to={LINKS.DASHBOARD}>Dashboard</NavLink>
                   </li>
-                ) : (
-                  <></>
                 )}
               </>
             )}
@@ -68,16 +74,6 @@ const Header: React.FC = () => {
             <li>
               <NavLink to="/about">About</NavLink>
             </li>
-            {isAuthenticated && (
-              <>
-                <li>
-                  <NavLink to="/anonymisation/submission">Submission</NavLink>
-                </li>
-                <li>
-                  <NavLink to="/attack/submission">Attack</NavLink>
-                </li>
-              </>
-            )}
           </ul>
         </nav>
         {/* Authen */}

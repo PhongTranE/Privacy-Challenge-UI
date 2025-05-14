@@ -13,6 +13,7 @@ const DashboardPage = lazy(() => import("@/pages/protected/DashboardPage"));
 const SubmissionPage = lazy(() => import("@/pages/protected/SubmissionPage"));
 const StartingPage = lazy(() => import("@/pages/protected/StartingPage"));
 const AttackPage = lazy(() => import("@/pages/protected/AttackPage"));
+const ProfilePage = lazy(() => import("@/pages/protected/ProfilePage"));
 
 const RulesPage = lazy(() => import("@/pages/public/RulesPage"));
 const AboutPage = lazy(() => import("@/pages/public/AboutPage"));
@@ -20,6 +21,9 @@ const RankingPage = lazy(() => import("@/pages/public/RankingPage"));
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
 const RegisterPage = lazy(() => import("@/pages/auth/RegisterPage"));
 const ActivationPage = lazy(() => import("@/pages/auth/email/ActivationPage"));
+const ResendActivationPage = lazy(
+  () => import("@/pages/auth/email/ResendActivationPage")
+);
 const ForgotPasswordPage = lazy(
   () => import("@/pages/auth/ForgotPasswordPage")
 );
@@ -53,6 +57,10 @@ const AppRoutes: React.FC = () => {
           {/* EmailActionLayout route */}
           <Route path={LINKS.EMAIL} element={<EmailActionLayout />}>
             <Route path="verify-account" element={<ActivationPage />} />
+            <Route
+              path="resend-activation"
+              element={<ResendActivationPage />}
+            />
             <Route path="activate" element={<ResultActivationPage />} />
             <Route path="reset-password" element={<ResetPasswordEmailPage />} />
           </Route>
@@ -65,6 +73,7 @@ const AppRoutes: React.FC = () => {
             <Route path={LINKS.DASHBOARD} element={<DashboardPage />} />
             <Route path={LINKS.SUBMISSION} element={<SubmissionPage />} />
             <Route path={LINKS.ATTACK} element={<AttackPage />} />
+            <Route path={LINKS.PROFILE} element={<ProfilePage />} />
           </Route>
         </Route>
 
