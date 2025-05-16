@@ -11,13 +11,14 @@ import {
   LoginResponseData,
   MeResponseData,
 } from "@/types/api/responses/authResponses";
-import axios from "@/services/axiosInstance";
 import { clearAccessToken } from "@/utils/token";
+import { useAuthStore } from "@/stores/authStore";
+import axiosInstance from "../axiosInstance";
 
 export const register = async (
   registerData: RegisterRequestBody
 ): Promise<APIResponse<RegisterResponseData>> => {
-  const res = await axios.post<APIResponse<RegisterResponseData>>(
+  const res = await axiosInstance.post<APIResponse<RegisterResponseData>>(
     "auth/register",
     registerData
   );
@@ -27,7 +28,7 @@ export const register = async (
 export const login = async (
   loginData: LoginRequestBody
 ): Promise<APIResponse<LoginResponseData>> => {
-  const res = await axios.post<APIResponse<LoginResponseData>>(
+  const res = await axiosInstance.post<APIResponse<LoginResponseData>>(
     "auth/login",
     loginData
   );
@@ -35,39 +36,51 @@ export const login = async (
 };
 
 export const logout = async (): Promise<APIResponse<null>> => {
-  const res = await axios.post<APIResponse<null>>("auth/logout");
-  clearAccessToken();
-  return res.data;
+  try {
+    const response = await axiosInstance.post<APIResponse<null>>("auth/logout");
+    
+    // Sau khi call API thành công, cập nhật store và xóa token
+    useAuthStore.getState().unauthenticate();
+    clearAccessToken();
+    
+    return response.data;
+  } catch (error) {
+    console.error("Logout API error:", error);
+    // Ngay cả khi call API thất bại, vẫn logout ở frontend
+    useAuthStore.getState().unauthenticate();
+    clearAccessToken();
+    throw error;
+  }
 };
 
 export const checkAuth = async (): Promise<APIResponse<MeResponseData>> => {
-  const response = await axios.post<APIResponse<MeResponseData>>("/auth/me");
-  return response.data;
+  const res = await axiosInstance.get<APIResponse<MeResponseData>>("auth/me");
+  return res.data;
 };
 
 export const resendActivationEmail = async (
   email: ResendActivationEmailRequestBody
 ): Promise<APIResponse<null>> => {
-  const response = await axios.post<APIResponse<null>>(
+  const res = await axiosInstance.post<APIResponse<null>>(
     "auth/resend-activation",
     email
   );
-  return response.data;
+  return res.data;
 };
 
 export const activateEmail = async (
   token: string
 ): Promise<APIResponse<null>> => {
-  const response = await axios.get<APIResponse<null>>(
+  const res = await axiosInstance.get<APIResponse<null>>(
     `auth/activation/${token}`
   );
-  return response.data;
+  return res.data;
 };
 
 export const forgotPassword = async (
   forgotPasswordData: ForgotPasswordRequestBody
 ): Promise<APIResponse<null>> => {
-  const res = await axios.post<APIResponse<null>>(
+  const res = await axiosInstance.post<APIResponse<null>>(
     "auth/forgot-password",
     forgotPasswordData
   );
@@ -78,7 +91,7 @@ export const resetPassword = async (
   token: string,
   resetPasswordData: ResetPasswordRequestBody
 ): Promise<APIResponse<null>> => {
-  const res = await axios.post<APIResponse<null>>(
+  const res = await axiosInstance.post<APIResponse<null>>(
     `auth/reset-password/${token}`,
     resetPasswordData
   );
@@ -88,7 +101,7 @@ export const resetPassword = async (
 export const checkGroup = async (
   groupName: string
 ): Promise<APIResponse<{ group: string }>> => {
-  const res = await axios.get<APIResponse<{ group: string }>>(
+  const res = await axiosInstance.get<APIResponse<{ group: string }>>(
     "auth/check-group",
     {
       params: { name: groupName }, // adds ?name=groupName to URL

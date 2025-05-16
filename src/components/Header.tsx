@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "@/styles/Components/Header.scss";
 import { useAuthStore } from "@/stores/authStore";
 import { Menu } from "@mantine/core";
 import { IconUserCircle } from "@tabler/icons-react";
 import { LINKS } from "@/constants/links";
+import { logout } from "@/services/api/authApi";
 const Header: React.FC = () => {
-  const { isAuthenticated, user, unauthenticate } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   const handleScroll = () => {
     const scrollThreshold = 40;
     const scrolled = window.scrollY > scrollThreshold;
     setIsScrolled(scrolled);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/auth/login");
   };
 
   useEffect(() => {
@@ -98,7 +105,7 @@ const Header: React.FC = () => {
               <Menu.Item component={Link} to={LINKS.CHANGE_PASSWORD}>
                 Change Password
               </Menu.Item>
-              <Menu.Item color="red" onClick={unauthenticate}>
+              <Menu.Item color="red" onClick={handleLogout}>
                 Logout
               </Menu.Item>
             </Menu.Dropdown>

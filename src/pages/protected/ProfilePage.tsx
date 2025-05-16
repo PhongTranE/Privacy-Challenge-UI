@@ -3,10 +3,17 @@ import { useAuthStore } from "@/stores/authStore";
 import "@/styles/Pages/Protected/ProfilePage.scss";
 import { Badge, Box, Button, Table, Text, Title } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { logout } from "@/services/api/authApi";
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, unauthenticate } = useAuthStore();
+  const { user } = useAuthStore();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate(LINKS.LOGIN);
+  };
+
   return (
     <>
       <main className="flex h-screen flex-col items-center justify-center gap-y-4">
@@ -85,12 +92,7 @@ const ProfilePage: React.FC = () => {
               Last updated: {new Date().toLocaleString()}
             </Text>
 
-            <Button
-              mt="md"
-              variant="filled"
-              color="red"
-              onClick={unauthenticate}
-            >
+            <Button mt="md" variant="filled" color="red" onClick={handleLogout}>
               Logout
             </Button>
           </Box>
