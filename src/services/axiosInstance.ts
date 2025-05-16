@@ -19,7 +19,7 @@ axiosInstance.interceptors.request.use(function(config){
     }
 
     // Transform outgoing data to snake_case
-    if (config.data) {
+    if (config.data && !(config.data instanceof FormData)) {
         config.data = snakecaseKeys(config.data, { deep: true })
     }
     return config;
