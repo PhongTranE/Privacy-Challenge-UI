@@ -7,7 +7,7 @@ import { useResendActivation } from '@/hooks/api/useResendActivation';
 import { useEmailPendingStore } from '@/stores/emailStore';
 import { Loader } from '@mantine/core';
 
-const COOLDOWN_SECONDS = 60;
+const COOLDOWN_SECONDS = 120;
 
 export default function ActivationPage() {
   const navigate = useNavigate();

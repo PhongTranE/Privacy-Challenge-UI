@@ -13,6 +13,7 @@ import {
   Text,
   Group,
   Stack,
+  Title,
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
@@ -93,9 +94,9 @@ const InviteKeyList = () => {
       )}
 
       <Group>
-        <Text size="xl" fw={500} c="#ff8c00">
+        <Title size="xl" fw={500} c="#ff8c00">
           Invite Keys
-        </Text>
+        </Title>
         <Button color="green" onClick={handleCreate} loading={isLoading}>
           Generate Invite Key
         </Button>

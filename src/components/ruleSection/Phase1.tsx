@@ -58,12 +58,12 @@ const Phase1: React.FC = () => {
           The ID must be changed in such a way that for a specific user and
           week, <strong>the ID does not change</strong>.
           <br />
-          <List.Item className="list-none">
+          <div className="mt-2">
             <Text size="sm">
               Example of a match for an identifier and a week number.
             </Text>
             <ExampleData />
-          </List.Item>
+          </div>
         </List.Item>
 
         <List.Item>
