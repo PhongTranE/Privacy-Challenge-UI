@@ -3,7 +3,7 @@ import { IconLogout } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { LINKS } from '@/constants/links';
 import { useEffect, useState } from 'react';
-import { useResendActivation } from '@/hooks/api/useResendActivation';
+import { useResendActivation } from '@/hooks/api/auth/useResendActivation';
 import { useEmailPendingStore } from '@/stores/emailStore';
 import { Loader } from '@mantine/core';
 
