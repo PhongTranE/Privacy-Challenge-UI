@@ -1,26 +1,21 @@
 import { create } from "zustand";
-import { InviteKey } from "@/types/api/responses/admin/inviteKeyResponses";
 
-type InviteKeyStore = {
-  inviteKeys: InviteKey[];
+interface InviteKeyState {
   currentPage: number;
-  totalItems: number;
-  isLoading: boolean;
+  isDeletingKey: string | null;
+  isDeletingExpired: boolean;
 
-  setInviteKeys: (keys: InviteKey[]) => void;
   setCurrentPage: (page: number) => void;
-  setTotalItems: (count: number) => void;
-  setLoading: (loading: boolean) => void;
-};
+  setIsDeletingKey: (key: string | null) => void;
+  setIsDeletingExpired: (v: boolean) => void;
+}
 
-export const useInviteKeyStore = create<InviteKeyStore>((set) => ({
-  inviteKeys: [],
+export const useInviteKeyStore = create<InviteKeyState>((set) => ({
   currentPage: 1,
-  totalItems: 0,
-  isLoading: false,
+  isDeletingKey: null,
+  isDeletingExpired: false,
 
-  setInviteKeys: (keys) => set({ inviteKeys: keys }),
   setCurrentPage: (page) => set({ currentPage: page }),
-  setTotalItems: (count) => set({ totalItems: count }),
-  setLoading: (loading) => set({ isLoading: loading }),
+  setIsDeletingKey: (key) => set({ isDeletingKey: key }),
+  setIsDeletingExpired: (v) => set({ isDeletingExpired: v }),
 }));

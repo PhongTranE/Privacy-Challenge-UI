@@ -1,19 +1,19 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   InviteKey,
   InviteKeyListResponseData,
 } from "@/types/api/responses/admin/inviteKeyResponses";
 import {
-  createInviteKey,
   fetchInviteKeys,
+  createInviteKey,
+  deleteInviteKey,
+  deleteAllExpiredInviteKeys,
 } from "@/services/api/admin/inviteKeyApi";
 import { useInviteKeyStore } from "@/stores/admin/inviteKeyStore";
 import { useNotify } from "@/hooks/useNotify";
 import { APIResponse } from "@/types/api/responses/responseTypes";
 
 export const useFetchInviteKeys = (page: number = 1, perPage: number = 5) => {
-  const { setInviteKeys, setTotalItems } = useInviteKeyStore();
-
   return useQuery({
     queryKey: ["inviteKeys", page, perPage],
     queryFn: async () => {
@@ -21,30 +21,67 @@ export const useFetchInviteKeys = (page: number = 1, perPage: number = 5) => {
         page,
         perPage
       );
-      setInviteKeys(res.data ?? []);
-      setTotalItems(res.meta.totalItems);
       return res;
     },
   });
 };
 
 export const useCreateInviteKey = () => {
+  const queryClient = useQueryClient();
   const { success, error } = useNotify();
 
   return useMutation({
     mutationFn: createInviteKey,
-
     onSuccess: (res: APIResponse<InviteKey>) => {
-      if (res.status !== "success") {
-        error(res);
-        return;
-      }
+      success("Success", "New key generated!");
+      queryClient.invalidateQueries({ queryKey: ["inviteKeys"] });
+    },
+    onError: (err: any) => {
+      error(err.message || "Failed to create invite key");
+    },
+  });
+};
 
-      const message = res.message as string;
-      success(message, "New key generated.");
+export const useDeleteInviteKey = () => {
+  const queryClient = useQueryClient();
+  const { success, error } = useNotify();
+  const { setIsDeletingKey } = useInviteKeyStore();
+
+  return useMutation({
+    mutationFn: deleteInviteKey,
+
+    onMutate: (key: string) => {
+      setIsDeletingKey(key);
+    },
+
+    onSuccess: (res: APIResponse<null>) => {
+      setIsDeletingKey(null);
+      success("Success", "Invite key deleted!");
+      queryClient.invalidateQueries({ queryKey: ["inviteKeys"] });
     },
 
     onError: (err: unknown) => {
+      setIsDeletingKey(null);
+      error(err || "Error", "Cannot delete invite key!");
+    },
+  });
+};
+
+export const useDeleteAllExpiredInviteKeys = () => {
+  const { success, error } = useNotify();
+  const { setIsDeletingExpired } = useInviteKeyStore();
+
+  return useMutation({
+    mutationFn: deleteAllExpiredInviteKeys,
+
+    onMutate: () => setIsDeletingExpired(true),
+    onSuccess: (res: APIResponse<null>) => {
+      setIsDeletingExpired(false);
+      success("Success", "Deleted all expired invite keys.");
+    },
+
+    onError: (err: unknown) => {
+      setIsDeletingExpired(false);
       error(err);
     },
   });

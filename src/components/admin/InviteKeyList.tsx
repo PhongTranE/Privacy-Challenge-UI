@@ -1,78 +1,95 @@
-import { useFetchInviteKeys } from "@/hooks/api/admin/useInviteKeys";
+import {
+  useCreateInviteKey,
+  useDeleteAllExpiredInviteKeys,
+  useDeleteInviteKey,
+  useFetchInviteKeys,
+} from "@/hooks/api/admin/useInviteKeys";
 import { useNotify } from "@/hooks/useNotify";
-import {
-  createInviteKey,
-  deleteInviteKey,
-} from "@/services/api/admin/inviteKeyApi";
 import { useInviteKeyStore } from "@/stores/admin/inviteKeyStore";
+import { InviteKey } from "@/types/api/responses/admin/inviteKeyResponses";
 import {
+  Badge,
   Button,
+  Group,
   Loader,
+  Modal,
   Pagination,
+  Stack,
   Table,
   Text,
-  Group,
-  Stack,
   Title,
 } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import { IconAlertTriangle, IconCheck, IconTrash } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 const InviteKeyList = () => {
-  const { inviteKeys, currentPage, setInviteKeys, setCurrentPage } =
+  const [inviteKeys, setInviteKeys] = useState<InviteKey[]>([]);
+  const { currentPage, setCurrentPage, isDeletingExpired, isDeletingKey } =
     useInviteKeyStore();
   const { data, isLoading, isError, error, refetch } = useFetchInviteKeys(
     currentPage,
     5
   );
-  const [deletingKeys, setDeletingKeys] = useState<Record<string, boolean>>({});
-
   const { success, error: showError } = useNotify();
+  const { mutate: deleteSingleKey } = useDeleteInviteKey();
+  const { mutateAsync: createKey } = useCreateInviteKey();
+  const [deleteExpiredModalOpened, setDeleteExpiredModalOpened] =
+    useState(false);
+  const { mutateAsync: deleteAllExpiredInviteKeys } =
+    useDeleteAllExpiredInviteKeys();
 
   useEffect(() => {
     if (data) {
-      // Sort invite keys by creation date in descending order
       const sortedKeys = [...(data.data ?? [])].sort(
         (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
       );
       setInviteKeys(sortedKeys);
     }
-  }, [data, setInviteKeys]);
+  }, [data]);
 
-  const handleDelete = async (key: string) => {
+  const handleDelete = (key: string) => {
+    deleteSingleKey(key, {
+      onSuccess: async () => {
+        if (currentPage > 1 && inviteKeys.length === 1) {
+          setCurrentPage(currentPage - 1);
+        } else {
+          await refetch();
+        }
+      },
+    });
+  };
+
+  // Khi click nút xóa all expired
+  const handleOpenDeleteExpiredModal = () => {
+    const expiredCount = inviteKeys.filter((k) => k.isExpired).length;
+    if (expiredCount === 0) {
+      showError("Error", "No expired invite keys to delete!");
+      return;
+    }
+    setDeleteExpiredModalOpened(true);
+  };
+
+  // Khi xác nhận xóa
+  const handleDeleteAllExpired = async () => {
     try {
-      setDeletingKeys((prev) => ({ ...prev, [key]: true }));
-      await deleteInviteKey(key);
-      // If we're on page > 1 and this is the last item on the page, go back to previous page
-      if (currentPage > 1 && inviteKeys.length === 1) {
-        setCurrentPage(currentPage - 1);
-      } else {
-        await refetch();
-      }
-      success("Success", "Invite key deleted successfully");
+      const res = await deleteAllExpiredInviteKeys();
+      await refetch();
+      setDeleteExpiredModalOpened(false);
+      const message = res?.message as string;
+      success("Success", message || "Deleted expired invite keys.");
     } catch (err: any) {
-      showError(err.message || "Failed to delete invite key");
-    } finally {
-      setDeletingKeys((prev) => ({ ...prev, [key]: false }));
+      showError(err.message || "Failed to delete expired invite keys");
     }
   };
 
   const handleCreate = async () => {
-    try {
-      await createInviteKey();
-      // Tính toán trang mới dựa trên tổng số items sau khi tạo
-      const newTotalItems = (data?.meta?.totalItems || 0) + 1;
-      const newPage = Math.ceil(newTotalItems / (data?.meta?.perPage || 5));
-
-      // Nếu trang hiện tại đã đầy (5 items), chuyển đến trang chứa key mới
-      if (inviteKeys.length >= (data?.meta?.perPage || 5)) {
-        setCurrentPage(newPage);
-      } else {
-        await refetch();
-      }
-      success("Success", "New key generated!");
-    } catch (err: any) {
-      showError(err.message || "Failed to create invite key");
+    await createKey();
+    const newTotalItems = (data?.meta?.totalItems || 0) + 1;
+    const newPage = Math.ceil(newTotalItems / (data?.meta?.perPage || 5));
+    if (inviteKeys.length >= (data?.meta?.perPage || 5)) {
+      setCurrentPage(newPage);
+    } else {
+      await refetch();
     }
   };
 
@@ -100,6 +117,13 @@ const InviteKeyList = () => {
         <Button color="green" onClick={handleCreate} loading={isLoading}>
           Generate Invite Key
         </Button>
+        <Button
+          color="red"
+          onClick={handleOpenDeleteExpiredModal}
+          disabled={isDeletingExpired}
+        >
+          Delete All Expired
+        </Button>
       </Group>
 
       <div className="flex flex-col flex-grow overflow-hidden mt-4">
@@ -112,6 +136,7 @@ const InviteKeyList = () => {
                 </Table.Th>
                 <Table.Th style={{ textAlign: "center" }}>Invite Key</Table.Th>
                 <Table.Th style={{ textAlign: "center" }}>Created</Table.Th>
+                <Table.Th style={{ textAlign: "center" }}>Status</Table.Th>
                 <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -126,12 +151,29 @@ const InviteKeyList = () => {
                     {new Date(key.created).toLocaleString()}
                   </Table.Td>
                   <Table.Td style={{ textAlign: "center" }}>
+                    {key.isExpired ? (
+                      <Badge
+                        color="red"
+                        leftSection={<IconAlertTriangle size={12} />}
+                      >
+                        Expired
+                      </Badge>
+                    ) : (
+                      <Badge
+                        color="green"
+                        leftSection={<IconCheck size={12} />}
+                      >
+                        Active
+                      </Badge>
+                    )}
+                  </Table.Td>
+                  <Table.Td style={{ textAlign: "center" }}>
                     <Button
                       color="red"
                       variant="light"
                       size="xs"
                       onClick={() => handleDelete(key.key)}
-                      loading={deletingKeys[key.key]}
+                      loading={isDeletingKey === key.key}
                     >
                       <IconTrash size={18} />
                     </Button>
@@ -157,6 +199,26 @@ const InviteKeyList = () => {
           </Group>
         )}
       </div>
+
+      <Modal
+        opened={deleteExpiredModalOpened}
+        onClose={() => setDeleteExpiredModalOpened(false)}
+        title="Delete all expired invite keys?"
+        centered
+      >
+        <Text mb="md">
+          Are you sure you want to delete <b>all expired invite keys</b>? This
+          action cannot be undone.
+        </Text>
+        <Button
+          color="red"
+          loading={isDeletingExpired}
+          onClick={handleDeleteAllExpired}
+          fullWidth
+        >
+          Confirm Delete
+        </Button>
+      </Modal>
     </Stack>
   );
 };

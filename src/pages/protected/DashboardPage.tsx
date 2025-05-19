@@ -10,10 +10,10 @@ const DashboardPage: React.FC = () => {
           Welcome to Management Interface!
         </Title>
         <Space h="lg" />
-        <section className="invite-key bg-[#060606e6] p-5 mb-8 rounded-md w-full max-w-6xl h-[65vh] max-h-screen overflow-y-auto border border-gray-400 mx-auto ">
+        <section className="invite-key bg-[#060606e6] p-5 mb-8 rounded-md w-full max-w-6xl h-[70vh] max-h-screen overflow-y-auto border border-gray-400 mx-auto ">
           <InviteKeyList />
         </section>
-        <section className="file-upload bg-[#060606e6] p-5 rounded-md w-full max-w-6xl border border-gray-400 mx-auto">
+        <section className="file-upload bg-[#060606e6] p-5 mb-8 rounded-md w-full max-w-6xl border border-gray-400 mx-auto">
           <UploadFile />
         </section>
       </Container>

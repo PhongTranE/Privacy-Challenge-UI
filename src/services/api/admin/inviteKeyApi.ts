@@ -42,3 +42,16 @@ export const deleteInviteKey = async (
     throw new Error(error.message || "Failed to delete invite key");
   }
 };
+
+export const deleteAllExpiredInviteKeys = async (): Promise<
+  APIResponse<null>
+> => {
+  try {
+    const res = await axiosInstance.delete("/admin/invite/expired");
+    return res.data;
+  } catch (error: any) {
+    throw new Error(
+      error.message || "Failed to delete all expired invite keys"
+    );
+  }
+};
