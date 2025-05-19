@@ -1,4 +1,4 @@
-import { useResetPassword } from "@/hooks/api/useResetPassword";
+import { useResetPassword } from "@/hooks/api/auth/useResetPassword";
 import {
   ResetPasswordInput,
   resetPasswordSchema,

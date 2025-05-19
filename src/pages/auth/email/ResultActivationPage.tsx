@@ -3,7 +3,7 @@ import { IconLogout } from '@tabler/icons-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { LINKS } from '@/constants/links';
 import { useEffect } from 'react';
-import { useActivateAccount } from '@/hooks/api/useActivateAccount';
+import { useActivateAccount } from '@/hooks/api/auth/useActivateAccount';
 import { useState } from 'react'
 
 

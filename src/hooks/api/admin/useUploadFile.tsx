@@ -4,7 +4,6 @@ import { useMutation } from "@tanstack/react-query";
 import { UploadFileResponseData } from "@/types/api/responses/admin/uploadFileResponses";
 import { validateUploadFile } from "@/utils/validations/fileValidation";
 
-
 export const useUploadFile = () => {
   const { uploadFile } = useFileUploadStore();
   const { success, error: notifyError } = useNotify();
@@ -28,4 +27,4 @@ export const useUploadFile = () => {
     handleUpload: mutation.mutateAsync,
     isUploading: mutation.isPending,
   };
-}; 
+};

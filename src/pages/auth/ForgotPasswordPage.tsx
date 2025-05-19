@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forgotPasswordSchema, ForgotPasswordInput } from '@/utils/validations/authValidations';
-import { useForgotPassword } from '@/hooks/api/useForgotPassword';
+import { useForgotPassword } from '@/hooks/api/auth/useForgotPassword';
 import { Button, Paper, Stack, Text, TextInput } from '@mantine/core';
 
 const ForgotPasswordPage: React.FC = () => {

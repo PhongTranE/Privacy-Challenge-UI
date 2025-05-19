@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 import { register } from '@/services/api/authApi';
-import { useNotify } from '../useNotify';
 import { APIResponse } from '@/types/api/responses/responseTypes';
 import { RegisterResponseData } from '@/types/api/responses/authResponses';
 import { useNavigate } from 'react-router-dom';
 import { LINKS } from '@/constants/links';
 import { useEmailPendingStore } from '@/stores/emailStore';
+import { useNotify } from '@/hooks/useNotify';
 
 export const useRegister = () => {
   const { success, error } = useNotify();

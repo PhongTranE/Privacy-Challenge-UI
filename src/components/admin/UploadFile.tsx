@@ -1,3 +1,4 @@
+import { useUploadFile } from "@/hooks/api/admin/useUploadFile";
 import {
   Box,
   Button,
@@ -7,7 +8,6 @@ import {
   Paper,
   Title,
 } from "@mantine/core";
-import { useUploadFile } from "@/hooks/api/admin/useUploadFile";
 import { IconUpload } from "@tabler/icons-react";
 
 export const UploadFile = () => {

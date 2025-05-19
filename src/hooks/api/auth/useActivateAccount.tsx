@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { activateEmail } from '@/services/api/authApi';
-import { useNotify } from '../useNotify';
+import { useNotify } from '../../useNotify';
 import { APIResponse } from '@/types/api/responses/responseTypes';
 import { useEmailPendingStore } from '@/stores/emailStore';
 

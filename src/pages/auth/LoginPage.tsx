@@ -4,7 +4,7 @@ import { LINKS } from "@/constants/links";
 import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginInput } from "@/utils/validations/authValidations";
-import { useLogin } from "@/hooks/api/useLogin";
+import { useLogin } from "@/hooks/api/auth/useLogin";
 import {
   Anchor,
   Button,

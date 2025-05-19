@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/services/api/authApi";
-import { useNotify } from "../useNotify";
+import { useNotify } from "../../useNotify";
 import { APIResponse } from "@/types/api/responses/responseTypes";
 import { useAuthStore } from "@/stores/authStore";
 import { setAccessToken } from "@/utils/token";

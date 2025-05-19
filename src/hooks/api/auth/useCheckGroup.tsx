@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { checkGroup } from '@/services/api/authApi';
-import { useNotify } from '../useNotify';
+import { useNotify } from '@/hooks/useNotify';
 import { APIResponse } from '@/types/api/responses/responseTypes';
 
 export const useCheckGroup = () => {

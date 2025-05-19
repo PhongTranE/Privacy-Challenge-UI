@@ -5,8 +5,6 @@ import { Link } from "react-router-dom"
 import { LINKS } from "@/constants/links"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { registerSchema, type RegisterInput } from "@/utils/validations/authValidations"
-import { useRegister } from "@/hooks/api/useRegister"
-import { useCheckGroup } from "@/hooks/api/useCheckGroup"
 import { useDebounce } from "@/hooks/utils/useDebounce"
 
 import {
@@ -22,6 +20,8 @@ import {
   Text,
   TextInput,
 } from "@mantine/core"
+import { useRegister } from "@/hooks/api/auth/useRegister"
+import { useCheckGroup } from "@/hooks/api/auth/useCheckGroup"
 
 const RegisterPage: React.FC = () => {
   const [acceptedTerms, setAcceptedTerms] = useState(false)

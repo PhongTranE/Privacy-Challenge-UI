@@ -51,7 +51,7 @@ const ProfilePage: React.FC = () => {
                     <Text c="gray.4">Team</Text>
                   </Table.Th>
                   <Table.Td>
-                    <Text c="blue">{user?.group_id}</Text>
+                    <Text c="blue">{user?.group?.name ?? '-'}</Text>
                   </Table.Td>
                 </Table.Tr>
                 <Table.Tr>
