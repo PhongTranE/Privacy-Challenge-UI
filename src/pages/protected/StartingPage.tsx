@@ -1,6 +1,6 @@
 import "@/styles/Pages/Protected/StartingPage.scss";
-import { Button, Divider, Text } from "@mantine/core";
-import { IconDownload } from "@tabler/icons-react";
+import { Text } from "@mantine/core";
+import { DownloadRawFileButton } from "@/components/DownloadRawFileButton";
 
 const StartingPage: React.FC = () => {
   return (
@@ -20,7 +20,7 @@ const StartingPage: React.FC = () => {
             <Text className="text-[30px]" c="#ff8c00">
               File to download:
             </Text>
-             <Button rightSection={<IconDownload size={14} />}>SOURCE FILE</Button>
+            <DownloadRawFileButton />
           </div>
         </section>
       </main>
