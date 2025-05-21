@@ -28,15 +28,23 @@ axiosInstance.interceptors.request.use(function(config){
 })
 
 axiosInstance.interceptors.response.use(function (response) {
-    
-    if (response.data && typeof response.data === 'object') {
+    // Chỉ chuyển đổi nếu không phải blob
+    if (
+      response.config.responseType !== 'blob' &&
+      response.data &&
+      typeof response.data === 'object'
+    ) {
         response.data = camelcaseKeys(response.data, { deep: true })
-      }
+    }
     return response;
 }, function (error) {
-    if (error.response?.data && typeof error.response.data === 'object') {
+    if (
+      error.response?.config?.responseType !== 'blob' &&
+      error.response?.data &&
+      typeof error.response.data === 'object'
+    ) {
         error.response.data = camelcaseKeys(error.response.data, { deep: true })
-      }
+    }
     return Promise.reject(error);
 });
 
