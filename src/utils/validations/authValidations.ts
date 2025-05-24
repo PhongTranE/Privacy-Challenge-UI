@@ -120,7 +120,31 @@ export const resetPasswordSchema = z
     path: ["confirm_new_password"],
   });
 
+// adminChangeUserPasswordSchema (chỉ cần new_password)
+export const adminChangeUserPasswordSchema = z.object({
+  new_password: z
+    .string({
+      required_error: "New password is required",
+      invalid_type_error: "New password must be a string",
+    })
+    .nonempty("New password cannot be empty")
+    .min(8, { message: "New password must be at least 8 characters long" })
+    .max(128, { message: "New password must be at most 128 characters long" })
+    .regex(strongPasswordRegex, {
+      message: "New password must contain uppercase, lowercase, a digit, and a symbol",
+    }),
+  confirm_password: z
+    .string({
+      required_error: "Confirm password is required",
+    })
+    .nonempty("Confirm password cannot be empty"),
+}).refine((data) => data.new_password === data.confirm_password, {
+  message: "Passwords do not match",
+  path: ["confirm_password"],
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type AdminChangeUserPasswordInput = z.infer<typeof adminChangeUserPasswordSchema>;

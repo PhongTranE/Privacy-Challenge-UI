@@ -1,9 +1,6 @@
-export interface Role {
-  name: string;
-}
+import { GroupUser } from "@/types/common/groupTypes";
 
-export interface Group {
-  id: number;
+export interface Role {
   name: string;
 }
 
@@ -13,6 +10,6 @@ export interface UserInterface {
   username: string;
   isActive: boolean;
   roles: Role[];
-  group: Group;
+  group: GroupUser;
   invite_key: string;
 }

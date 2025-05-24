@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  InviteKey,
   InviteKeyListResponseData,
 } from "@/types/api/responses/admin/inviteKeyResponses";
 import {
@@ -11,7 +10,6 @@ import {
 } from "@/services/api/admin/inviteKeyApi";
 import { useInviteKeyStore } from "@/stores/admin/inviteKeyStore";
 import { useNotify } from "@/hooks/useNotify";
-import { APIResponse } from "@/types/api/responses/responseTypes";
 
 export const useFetchInviteKeys = (page: number = 1, perPage: number = 5) => {
   return useQuery({
@@ -32,7 +30,7 @@ export const useCreateInviteKey = () => {
 
   return useMutation({
     mutationFn: createInviteKey,
-    onSuccess: (res: APIResponse<InviteKey>) => {
+    onSuccess: () => {
       success("Success", "New key generated!");
       queryClient.invalidateQueries({ queryKey: ["inviteKeys"] });
     },
@@ -54,7 +52,7 @@ export const useDeleteInviteKey = () => {
       setIsDeletingKey(key);
     },
 
-    onSuccess: (res: APIResponse<null>) => {
+    onSuccess: () => {
       setIsDeletingKey(null);
       success("Success", "Invite key deleted!");
       queryClient.invalidateQueries({ queryKey: ["inviteKeys"] });
@@ -75,14 +73,14 @@ export const useDeleteAllExpiredInviteKeys = () => {
     mutationFn: deleteAllExpiredInviteKeys,
 
     onMutate: () => setIsDeletingExpired(true),
-    onSuccess: (res: APIResponse<null>) => {
+    onSuccess: () => {
       setIsDeletingExpired(false);
       success("Success", "Deleted all expired invite keys.");
     },
 
     onError: (err: unknown) => {
       setIsDeletingExpired(false);
-      error(err);
+      error(err || "Error", "Cannot delete all expired invite keys!");
     },
   });
 };
