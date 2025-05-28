@@ -18,7 +18,6 @@ import { FileResponse } from "@/types/api/responses/admin/fileResponses";
 import { useEffect, useState } from "react";
 import { MAX_FILE_SIZE } from "@/utils/validations/fileValidation";
 
-
 export const UploadFile = () => {
   const { handleUpload, isUploading } = useUploadFile();
   const {
@@ -33,7 +32,9 @@ export const UploadFile = () => {
   const [fileInputKey, setFileInputKey] = useState(Date.now());
   const [duplicateFile, setDuplicateFile] = useState<File | null>(null);
   const [showDuplicateModal, setShowDuplicateModal] = useState(false);
-  const [duplicateFilename, setDuplicateFilename] = useState<string | null>(null);
+  const [duplicateFilename, setDuplicateFilename] = useState<string | null>(
+    null
+  );
   const [isResolvingDuplicate, setIsResolvingDuplicate] = useState(false);
 
   useEffect(() => {
@@ -50,8 +51,7 @@ export const UploadFile = () => {
         await handleUpload(file);
         fetchFiles();
       } catch (error: any) {
-        console.log("Upload error:", error);
-        if (error?.duplicate) {
+        if (error?.message === "File name already exists") {
           setDuplicateFile(file);
           setDuplicateFilename(error.filename || file.name);
           setShowDuplicateModal(true);
@@ -165,7 +165,9 @@ export const UploadFile = () => {
               files.map((file: FileResponse) => (
                 <Table.Tr key={file.id}>
                   <Table.Td className="text-center">{file.filename}</Table.Td>
-                  <Table.Td className="text-center">{new Date(file.uploadedAt).toLocaleString()}</Table.Td>
+                  <Table.Td className="text-center">
+                    {new Date(file.uploadedAt).toLocaleString()}
+                  </Table.Td>
                   <Table.Td className="text-center">
                     <Badge color={file.isActive ? "green" : "gray"}>
                       {file.isActive ? "Active" : "Inactive"}
@@ -199,18 +201,37 @@ export const UploadFile = () => {
           </Table.Tbody>
         </Table>
       </Box>
-      <Modal opened={showDuplicateModal} onClose={() => setShowDuplicateModal(false)} title="File trùng tên" centered>
+      <Modal
+        opened={showDuplicateModal}
+        onClose={() => setShowDuplicateModal(false)}
+        title="File trùng tên"
+        centered
+      >
         <Text>
-          File <b>{duplicateFilename}</b> đã tồn tại. Bạn muốn thay thế file cũ hay tự động đổi tên file mới?
+          File <b>{duplicateFilename}</b> đã tồn tại. Bạn muốn thay thế file cũ
+          hay tự động đổi tên file mới?
         </Text>
         <Group mt="md">
-          <Button color="red" onClick={handleOverwrite} loading={isResolvingDuplicate} disabled={isResolvingDuplicate}>
+          <Button
+            color="red"
+            onClick={handleOverwrite}
+            loading={isResolvingDuplicate}
+            disabled={isResolvingDuplicate}
+          >
             Thay thế
           </Button>
-          <Button onClick={handleAutoRename} loading={isResolvingDuplicate} disabled={isResolvingDuplicate}>
+          <Button
+            onClick={handleAutoRename}
+            loading={isResolvingDuplicate}
+            disabled={isResolvingDuplicate}
+          >
             Tự động đổi tên
           </Button>
-          <Button variant="default" onClick={() => setShowDuplicateModal(false)} disabled={isResolvingDuplicate}>
+          <Button
+            variant="default"
+            onClick={() => setShowDuplicateModal(false)}
+            disabled={isResolvingDuplicate}
+          >
             Hủy
           </Button>
         </Group>
