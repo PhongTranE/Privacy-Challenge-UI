@@ -1,5 +1,4 @@
 import {
-  useFetchUsersList,
   useDeleteUser,
 } from "@/hooks/api/admin/useUsersManage";
 import {
@@ -16,6 +15,7 @@ import {
   Badge,
   Table,
   Stack,
+  Flex,
 } from "@mantine/core";
 import {
   IconUserX,
@@ -24,21 +24,13 @@ import {
   IconChevronUp,
   IconChevronDown,
 } from "@tabler/icons-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ChangePasswordModal } from "@/components/admin/user/ChangePasswordModal";
 import { DeleteUserModal } from "@/components/admin/user/DeleteUserModal";
-import { useDebounce } from "@/hooks/utils/useDebounce";
-
+import { usePaginatedQuery } from "@/hooks/utils/usePaginatedQuery";
+import { fetchUsersList } from "@/services/api/admin/usersManageApi";
 export default function UserManage() {
-  const [page, setPage] = useState(1);
-  const perPage = 5;
   const { search, setSearch } = useUsersManageStore();
-  const debouncedSearch = useDebounce(search, 500);
-  const { data, isLoading, error } = useFetchUsersList(
-    page,
-    perPage,
-    debouncedSearch
-  );
   const { openModal: openChangePwModal } = useChangePasswordModalStore();
   const { mutate: deleteUser, isPending: isDeletingUser } = useDeleteUser();
   const {
@@ -47,15 +39,26 @@ export default function UserManage() {
     openModal: openDeleteModal,
     closeModal: closeDeleteModal,
   } = useDeleteUserModalStore();
+
+  const {
+    data,
+    page,
+    setPage,
+    isLoading,
+    error,
+    debouncedSearch,
+    hasNext,
+  } = usePaginatedQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsersList,
+    search,
+    perPage: 5,
+  });
+
   const [sortBy, setSortBy] = useState<
     "id" | "username" | "email" | "group" | "status"
   >("id");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-
-  // Reset về trang 1 khi search thay đổi
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch]);
 
   // Sort user
   const sortedUsers = [...(data?.data ?? [])].sort((a, b) => {
@@ -116,19 +119,14 @@ export default function UserManage() {
             Total: {data.meta.totalItems} users
           </Badge>
         )}
-        {debouncedSearch && data?.meta && (
-          <Text size="sm" c="gray" mt="5px">
-            🔎 Found <strong>{data.meta.totalItems}</strong> users matching "
-            <strong>{debouncedSearch}</strong>"
-          </Text>
-        )}
       </Title>
-      <TextInput
-        placeholder="Search by username, email or group name"
-        value={search}
-        onChange={(e) => setSearch(e.currentTarget.value)}
-        w={320}
-        autoComplete="off"
+      <Flex align="center" columnGap={20}>
+        <TextInput
+          placeholder="Enter username, email or groupname"
+          value={search}
+          onChange={(e) => setSearch(e.currentTarget.value)}
+          w={320}
+          autoComplete="off"
         rightSection={
           search ? (
             <IconX
@@ -137,12 +135,20 @@ export default function UserManage() {
               onClick={() => setSearch("")}
             />
           ) : null
-        }
-      />
+          }
+        />
+        {debouncedSearch && data?.meta && (
+          <Text size="sm" c="gray">
+            🔎 Found <strong>{data.meta.totalItems}</strong>{" "}
+            {data.meta.totalItems < 2 ? "user" : "users"} matching "
+            <strong>{debouncedSearch}</strong>"
+          </Text>
+        )}
+      </Flex>
       {isLoading && <Text>Loading...</Text>}
       {error && <Text c="red">{error.message}</Text>}
-      <div className="flex flex-col flex-grow justify-between overflow-hidden  rounded-xl bg-black/60 p-4">
-        <div className="flex-grow min-h-[60vh] overflow-y-auto">
+      <div className="flex flex-col flex-grow justify-between overflow-y-auto rounded-xl bg-black/60 p-4">
+        <div className="flex-grow  overflow-y-auto">
           <Table withTableBorder horizontalSpacing="sm" verticalSpacing="sm">
             <Table.Thead>
               <Table.Tr>
@@ -274,7 +280,7 @@ export default function UserManage() {
             Previous
           </Button>
           <Button
-            disabled={!data?.meta?.hasNext}
+            disabled={!hasNext}
             onClick={() => setPage((p) => p + 1)}
           >
             Next

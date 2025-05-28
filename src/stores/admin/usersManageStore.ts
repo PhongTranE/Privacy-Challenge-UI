@@ -19,15 +19,6 @@ interface ChangePasswordModalState {
   closeModal: () => void;
 }
 
-interface ChangeGroupModalStore {
-  modalOpen: boolean;
-  userId: number | null;
-  username: string;
-  currentGroup: string;
-  openModal: (userId: number, username: string, currentGroup: string) => void;
-  closeModal: () => void;
-}
-
 export const useUsersManageStore = create<UsersManageState>((set) => ({
   search: "",
   setSearch: (value: string) => set({ search: value }),
@@ -45,14 +36,4 @@ export const useChangePasswordModalStore = create<ChangePasswordModalState>((set
   userId: null,
   openModal: (userId) => set({ modalOpen: true, userId }),
   closeModal: () => set({ modalOpen: false, userId: null }),
-}));
-
-export const useChangeGroupModalStore = create<ChangeGroupModalStore>((set) => ({
-  modalOpen: false,
-  userId: null,
-  username: "",
-  currentGroup: "",
-  openModal: (userId, username, currentGroup) =>
-    set({ modalOpen: true, userId, username, currentGroup }),
-  closeModal: () => set({ modalOpen: false, userId: null, username: "", currentGroup: "" }),
 }));

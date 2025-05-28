@@ -3,7 +3,7 @@ import { useNotify } from "@/hooks/useNotify";
 import { UsersInfoResponseData } from "@/types/api/responses/admin/usersInfoResponses";
 import { AdminChangeUserPasswordRequest } from "@/types/api/requests/adminRequests";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { changeUserPassword, deleteUser, fetchUsersList } from "@/services/api/admin/usersManageAPi";
+import { changeUserPassword, deleteUser, fetchUsersList } from "@/services/api/admin/usersManageApi";
 
 export const useFetchUsersList = (
   page: number = 1,
@@ -32,6 +32,7 @@ export const useDeleteUser = () => {
     onSuccess: () => {
       success("Success", "User deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["groups"], exact: false });
     },
     onError: (err: any) => {
       error("Error", err?.response?.data?.message || "Failed to delete user!");
