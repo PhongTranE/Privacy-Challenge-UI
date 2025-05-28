@@ -3,6 +3,7 @@ import InviteKeyList from "@/components/admin/InviteKeyList";
 import { UploadFile } from "@/components/admin/UploadFile";
 import UserManage from "@/components/admin/user/UserManage";
 import { Container, Space, Title } from "@mantine/core";
+import "@/styles/Components/DashboardPage.scss";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -18,10 +19,10 @@ const DashboardPage: React.FC = () => {
         <section className="file-upload bg-[#060606e6] p-5 mb-8 rounded-md w-full max-w-6xl border border-gray-400 mx-auto">
           <UploadFile />
         </section>
-        <section className="user-manage min-h-[60vh] bg-[#060606e6] p-5 mb-8 rounded-md w-full max-w-6xl border border-gray-400 mx-auto">
+        <section className="user-manage min-h-[60vh] bg-[#060606e6] p-5 mb-8 rounded-md w-full h-[80vh] max-w-6xl border border-gray-400 mx-auto">
           <UserManage />
         </section>
-        <section className="group-manage bg-[#060606e6] p-5 rounded-md w-full max-w-6xl border border-gray-400 mx-auto">
+        <section className="group-manage min-h-[60vh] bg-[#060606e6] p-5 rounded-md w-full h-[80vh] max-w-6xl border border-gray-400 mx-auto">
           <GroupManage />
         </section>
       </Container>

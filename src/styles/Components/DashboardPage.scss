@@ -1,0 +1,99 @@
+.ban-unban-modal {
+  --modal-bg: #111111;
+  --modal-text: #f1f1f1;
+  --modal-border: #face5f;
+  --modal-success: #52c41a;
+  --modal-success-hover: #389e0d; // thêm màu hover tĩnh
+  --modal-warning: #faad14;
+  --modal-danger: #f5222d;
+  --modal-danger-hover: #d32029; // thêm màu hover tĩnh
+  .m_b5489c3c{
+    background-color: var(--modal-bg);
+  }
+
+  background-color: var(--modal-bg) !important;
+  color: var(--modal-text);
+  border: 1px solid var(--modal-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+
+  .modal-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--modal-warning);
+
+    svg {
+      margin-right: 0.5rem;
+      color: var(--modal-danger);
+    }
+  }
+
+  .modal-body {
+    margin-top: 1rem;
+
+    p {
+      margin-bottom: 0.75rem;
+      color: var(--modal-text);
+      font-size: 0.9rem;
+
+      strong {
+        color: var(--modal-danger);
+      }
+    }
+
+    .group-name {
+      background-color: #2d2d2d;
+      color: #fff;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .description {
+      font-size: 0.8rem;
+      color: #b0b0b0;
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+
+    .mantine-Button-root {
+      font-weight: 600;
+      border-radius: 0.375rem;
+    }
+
+    .cancel-btn {
+      background-color: #2d2d2d;
+      color: #ccc;
+
+      &:hover {
+        background-color: #3a3a3a;
+      }
+    }
+
+    .confirm-btn {
+      &.ban {
+        background-color: var(--modal-danger);
+
+        &:hover {
+          background-color: var(--modal-danger-hover);
+        }
+      }
+
+      &.unban {
+        background-color: var(--modal-success);
+
+        &:hover {
+          background-color: var(--modal-success-hover);
+        }
+      }
+    }
+  }
+}

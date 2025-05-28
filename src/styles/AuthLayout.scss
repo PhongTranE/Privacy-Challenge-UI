@@ -32,7 +32,59 @@
     }
 
     &__forgot-password {
-      min-width: 30%;
+      background: rgba(20, 30, 48, 0.95);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      margin: 0 auto;
+      color: #e0e6ed;
+      position: relative;
+      z-index: 2;
+
+      h1,
+      .mantine-Text-root {
+        color: #00e6e6;
+        text-shadow: 0 0 8px #00e6e644;
+      }
+
+      .mantine-TextInput-input {
+        background: #232946;
+        color: #e0e6ed;
+        border: 1px solid #00e6e6;
+        border-radius: 8px;
+      }
+
+      .mantine-Button-root {
+        background: linear-gradient(90deg, #00e6e6 0%, #007cf0 100%);
+        color: #fff;
+        font-weight: bold;
+        border-radius: 999px;
+        box-shadow: 0 2px 8px #00e6e644;
+        transition: background 0.2s, box-shadow 0.2s;
+      }
+
+      .mantine-Button-root:disabled {
+        background: #232946;
+        color: #aaa;
+        box-shadow: none;
+      }
+
+      .mantine-Button-root:hover:not(:disabled) {
+        background: linear-gradient(90deg, #007cf0 0%, #00e6e6 100%);
+        box-shadow: 0 4px 16px #00e6e688;
+      }
+
+      .mantine-Anchor-root {
+        color: #00e6e6;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .mantine-Anchor-root:hover {
+        color: #fff;
+        text-decoration: underline;
+      }
     }
   }
 }

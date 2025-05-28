@@ -3,18 +3,17 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import "@/styles/Components/Header.scss";
 import { useAuthStore } from "@/stores/authStore";
 import { Menu } from "@mantine/core";
-import { IconUserCircle } from "@tabler/icons-react";
+import { IconMenu2, IconUserCircle } from "@tabler/icons-react";
 import { LINKS } from "@/constants/links";
 import { logout } from "@/services/api/authApi";
 const Header: React.FC = () => {
   const { isAuthenticated, user } = useAuthStore();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleScroll = () => {
-    const scrollThreshold = 40;
-    const scrolled = window.scrollY > scrollThreshold;
-    setIsScrolled(scrolled);
+    setIsScrolled(window.scrollY > 40);
   };
 
   const handleLogout = async () => {
@@ -44,7 +43,15 @@ const Header: React.FC = () => {
             PCP
           </Link>
         </div>
-        <nav className="nav">
+
+        <button
+          className="mobile-toggle"
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+        >
+          <IconMenu2 stroke={2} />
+        </button>
+        
+        <nav className={`nav ${isMobileMenuOpen ? "open" : ""}`}>
           <ul>
             {!isAuthenticated ? (
               <li>
