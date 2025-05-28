@@ -1,5 +1,5 @@
 import { Button, Stack, TextInput, Text, Title, Group } from "@mantine/core";
-import { useResendActivation } from "@/hooks/api/useResendActivation";
+import { useResendActivation } from "@/hooks/api/auth/useResendActivation";
 import { useNotify } from "@/hooks/useNotify";
 import { useAuthStore } from "@/stores/authStore";
 import { useEffect } from "react";
