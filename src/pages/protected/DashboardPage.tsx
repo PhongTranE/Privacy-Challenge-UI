@@ -2,6 +2,7 @@ import GroupManage from "@/components/admin/group/GroupManage";
 import InviteKeyList from "@/components/admin/InviteKeyList";
 import { UploadFile } from "@/components/admin/UploadFile";
 import UserManage from "@/components/admin/user/UserManage";
+import MetricsAggregationConfig from "@/components/admin/MetricsAggregationManage";
 import { Container, Space, Title } from "@mantine/core";
 import "@/styles/Components/DashboardPage.scss";
 
@@ -15,6 +16,9 @@ const DashboardPage: React.FC = () => {
         <Space h="lg" />
         <section className="invite-key bg-[#060606e6] p-5 mb-8 rounded-md w-full max-w-6xl h-[70vh] max-h-screen overflow-y-auto border border-gray-400 mx-auto ">
           <InviteKeyList />
+        </section>
+        <section className="metrics-aggregation bg-[#060606e6] p-5 mb-8 rounded-md w-full max-w-6xl border border-gray-400 mx-auto">
+          <MetricsAggregationConfig />
         </section>
         <section className="file-upload bg-[#060606e6] p-5 mb-8 rounded-md w-full max-w-6xl border border-gray-400 mx-auto">
           <UploadFile />
