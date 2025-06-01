@@ -25,3 +25,9 @@ export interface ResetPasswordRequestBody {
 export interface ResendActivationEmailRequestBody {
   email: string;
 }
+
+export interface ChangePasswordRequestBody {
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
+}

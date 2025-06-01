@@ -4,6 +4,7 @@ import {
   ResendActivationEmailRequestBody,
   ForgotPasswordRequestBody,
   ResetPasswordRequestBody,
+  ChangePasswordRequestBody,
 } from "@/types/api/requests/authRequests";
 import { APIResponse } from "@/types/api/responses/responseTypes";
 import {
@@ -107,5 +108,12 @@ export const checkGroup = async (
       params: { name: groupName }, // adds ?name=groupName to URL
     }
   );
+  return res.data;
+};
+
+export const changePassword = async (
+  changePasswordData: ChangePasswordRequestBody
+): Promise<APIResponse<null>> => {
+  const res = await axiosInstance.post<APIResponse<null>>("auth/change-password", changePasswordData);
   return res.data;
 };

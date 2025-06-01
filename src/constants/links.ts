@@ -10,6 +10,7 @@ export const LINKS = {
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
   FORGOT_PASSWORD: "/auth/forgot-password",
+  CHANGE_PASSWORD: "/auth/change-password",
 
   EMAIL: "/email",
   VERIFY_ACCOUNT: "/email/verify-account",
@@ -25,7 +26,6 @@ export const LINKS = {
 
   //Profile
   PROFILE: "/me/profile",
-  CHANGE_PASSWORD: "/me/change-password",
 
   NOT_FOUND: "*",
 } as const;

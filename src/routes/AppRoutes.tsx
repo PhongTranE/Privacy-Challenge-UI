@@ -14,6 +14,7 @@ const SubmissionPage = lazy(() => import("@/pages/protected/SubmissionPage"));
 const StartingPage = lazy(() => import("@/pages/protected/StartingPage"));
 const AttackPage = lazy(() => import("@/pages/protected/AttackPage"));
 const ProfilePage = lazy(() => import("@/pages/protected/ProfilePage"));
+const ChangePasswordPage = lazy(() => import("@/pages/auth/ChangePasswordPage"));
 
 const RulesPage = lazy(() => import("@/pages/public/RulesPage"));
 const AboutPage = lazy(() => import("@/pages/public/AboutPage"));
@@ -74,6 +75,9 @@ const AppRoutes: React.FC = () => {
             <Route path={LINKS.SUBMISSION} element={<SubmissionPage />} />
             <Route path={LINKS.ATTACK} element={<AttackPage />} />
             <Route path={LINKS.PROFILE} element={<ProfilePage />} />
+            <Route path={LINKS.AUTH} element={<AuthLayout />}>
+              <Route path={LINKS.CHANGE_PASSWORD} element={<ChangePasswordPage />} />
+            </Route>
           </Route>
         </Route>
 
