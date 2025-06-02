@@ -38,6 +38,7 @@ import {
   useDeleteGroupFile,
 } from "@/hooks/api/admin/useGroupManage";
 import { GroupFile } from "@/types/common/groupTypes";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const GroupDetailModal = () => {
   const { modalOpen, groupToDetail, closeModal } = useDetailGroupModalStore();
@@ -71,6 +72,7 @@ export const GroupDetailModal = () => {
     });
   };
   const deleteMutation = useDeleteGroupFile();
+  const queryClient = useQueryClient();
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
   const [fileToDelete, setFileToDelete] = useState<GroupFile | null>(null);
   const handleDeleteFile = (file: GroupFile) => {
@@ -528,6 +530,8 @@ export const GroupDetailModal = () => {
           });
         }
         setConfirmDeleteModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["groupFiles"] });
+        queryClient.invalidateQueries({ queryKey: ["groupDetailFull"] });
       }}
     >
       Delete
