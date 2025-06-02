@@ -14,6 +14,7 @@ import {
 import { useAggregationsStore, useMetricsStore } from "@/stores/admin/metricsStore";
 import { useNotify } from "@/hooks/useNotify";
 import { IconX, IconCheck } from "@tabler/icons-react";
+import { useCompetitionStatus } from "@/hooks/api/admin/useCompetition";
 
 export default function MetricsAggregationManager() {
   // Aggregation
@@ -34,6 +35,7 @@ export default function MetricsAggregationManager() {
 
   // Notify
   const { success } = useNotify();
+  const { data: competitionStatus } = useCompetitionStatus();  // Fetch competition status
 
   // Params editing state
   const [editingParams, setEditingParams] = useState<Record<string, string>>({});
@@ -98,6 +100,10 @@ export default function MetricsAggregationManager() {
     }
   };
 
+
+  const isMetricsLocked = competitionStatus?.data.metricsLocked || false;  // Check if metrics are locked
+  const isAggregationLocked = competitionStatus?.data.aggregationLocked || false;  // Check if aggregation is locked
+
   return (
     <Box p="md" className="rounded-lg mt-4">
       <Title size="xl" fw={500} c="#ff8c00" className="mb-4">
@@ -118,6 +124,7 @@ export default function MetricsAggregationManager() {
               className="text-white"
               color="orange"
               size="md"
+              disabled={isAggregationLocked}
             />
           ))}
         </Group>
@@ -156,6 +163,7 @@ export default function MetricsAggregationManager() {
                         <IconX size={12} color="var(--mantine-color-red-6)" stroke={3} />
                       )
                     }
+                    disabled={isMetricsLocked}
                   />
                 </td>
                 <td>
@@ -165,13 +173,14 @@ export default function MetricsAggregationManager() {
                     classNames={{ input: "bg-gray-800 text-white" }}
                     size="sm"
                     placeholder="Enter parameters (JSON)"
+                    disabled={isMetricsLocked}
                   />
                 </td>
                 <td className="text-center">
                   <Button
                     size="xs"
                     color="orange"
-                    disabled={!metric.isSelected || !paramChanged || invalidParam} // Disable when metric is not selected or invalid
+                    disabled={!metric.isSelected || !paramChanged || invalidParam || isMetricsLocked} // Disable when metric is not selected or invalid
                     onClick={() => handleUpdateClick(metric.name)}
                   >
                     Update

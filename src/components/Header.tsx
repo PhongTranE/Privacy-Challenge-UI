@@ -50,7 +50,7 @@ const Header: React.FC = () => {
         >
           <IconMenu2 stroke={2} />
         </button>
-        
+
         <nav className={`nav ${isMobileMenuOpen ? "open" : ""}`}>
           <ul>
             {!isAuthenticated ? (
@@ -60,9 +60,14 @@ const Header: React.FC = () => {
             ) : (
               <>
                 {user?.roles[0].name === "Administrator" && (
-                  <li>
-                    <NavLink to={LINKS.DASHBOARD}>Dashboard</NavLink>
-                  </li>
+                  <>
+                    <li>
+                      <NavLink to={LINKS.DASHBOARD}>Dashboard</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to={LINKS.STATUS}>Status</NavLink>
+                    </li>
+                  </>
                 )}
               </>
             )}

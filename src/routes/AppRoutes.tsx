@@ -10,6 +10,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 // const AppLayout = lazy(() => import('@/layouts/AppLayout'));
 const HomePage = lazy(() => import("@/pages/public/HomePage"));
 const DashboardPage = lazy(() => import("@/pages/protected/DashboardPage"));
+const StatusPage = lazy(() => import("@/pages/protected/StatusPage"));
 const SubmissionPage = lazy(() => import("@/pages/protected/SubmissionPage"));
 const StartingPage = lazy(() => import("@/pages/protected/StartingPage"));
 const AttackPage = lazy(() => import("@/pages/protected/AttackPage"));
@@ -72,6 +73,7 @@ const AppRoutes: React.FC = () => {
           <Route element={<AppLayout />}>
             <Route path={LINKS.START} element={<StartingPage />} />
             <Route path={LINKS.DASHBOARD} element={<DashboardPage />} />
+            <Route path={LINKS.STATUS} element={<StatusPage />} />
             <Route path={LINKS.SUBMISSION} element={<SubmissionPage />} />
             <Route path={LINKS.ATTACK} element={<AttackPage />} />
             <Route path={LINKS.PROFILE} element={<ProfilePage />} />

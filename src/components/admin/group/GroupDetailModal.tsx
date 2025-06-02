@@ -234,10 +234,10 @@ export const GroupDetailModal = () => {
             <Table className="text-white [&_thead_th]:text-gray-300 [&_tbody_td]:text-white border border-[#2a2d32]">
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>Name</Table.Th>
-                  <Table.Th>Type</Table.Th>
-                  <Table.Th>Score</Table.Th>
-                  <Table.Th>Status</Table.Th>
+                  <Table.Th className="text-center">Name</Table.Th>
+                  <Table.Th className="text-center">Type</Table.Th>
+                  <Table.Th className="text-center">Score</Table.Th>
+                  <Table.Th className="text-center">Status</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -245,8 +245,8 @@ export const GroupDetailModal = () => {
                   .slice(0, 5)
                   .map((file: GroupFile) => (
                     <Table.Tr key={`${file.fileType}-${file.id}`}>
-                      <Table.Td>{file.name}</Table.Td>
-                      <Table.Td>
+                      <Table.Td className="text-center">{file.name}</Table.Td>
+                      <Table.Td className="text-center">
                         <Badge
                           variant="light"
                           color={file.fileType === "anonymous" ? "blue" : "red"}
@@ -254,8 +254,8 @@ export const GroupDetailModal = () => {
                           {file.fileType}
                         </Badge>
                       </Table.Td>
-                      <Table.Td>{file.score.toFixed(4)}</Table.Td>
-                      <Table.Td>
+                      <Table.Td className="text-center">{file.score.toFixed(4)}</Table.Td>
+                      <Table.Td className="text-center">
                         <Badge
                           variant="light"
                           color={file.isPublished ? "green" : "yellow"}
@@ -285,20 +285,20 @@ export const GroupDetailModal = () => {
         <Table className="text-white [&_thead_th]:text-gray-300 [&_tbody_td]:text-white border border-[#2a2d32]">
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>ID</Table.Th>
-              <Table.Th>Username</Table.Th>
-              <Table.Th>Email</Table.Th>
-              <Table.Th>Status</Table.Th>
-              <Table.Th>Actions</Table.Th>
+              <Table.Th className="text-center">ID</Table.Th>
+              <Table.Th className="text-center">Username</Table.Th>
+              <Table.Th className="text-center">Email</Table.Th>
+              <Table.Th className="text-center">Status</Table.Th>
+              <Table.Th className="text-center">Actions</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
             {groupDetailFull.members.map((member) => (
               <Table.Tr key={member.id}>
-                <Table.Td>{member.id}</Table.Td>
-                <Table.Td>{member.username}</Table.Td>
-                <Table.Td>{member.email}</Table.Td>
-                <Table.Td>
+                <Table.Td className="text-center">{member.id}</Table.Td>
+                <Table.Td className="text-center">{member.username}</Table.Td>
+                <Table.Td className="text-center">{member.email}</Table.Td>
+                <Table.Td className="text-center">
                   <Badge
                     variant="light"
                     color={member.isActive ? "green" : "gray"}
@@ -306,7 +306,7 @@ export const GroupDetailModal = () => {
                     {member.isActive ? "Active" : "Inactive"}
                   </Badge>
                 </Table.Td>
-                <Table.Td>
+                <Table.Td className="text-center">
                   <ActionIcon
                     color="red"
                     variant="light"
@@ -377,20 +377,20 @@ export const GroupDetailModal = () => {
         >
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>ID</Table.Th>
-              <Table.Th>Name</Table.Th>
-              <Table.Th>Type</Table.Th>
-              <Table.Th>Score</Table.Th>
-              <Table.Th>Status</Table.Th>
-              <Table.Th>Actions</Table.Th>
+              <Table.Th className="text-center">ID</Table.Th>
+              <Table.Th className="text-center">Name</Table.Th>
+              <Table.Th className="text-center">Type</Table.Th>
+              <Table.Th className="text-center">Score</Table.Th>
+              <Table.Th className="text-center">Status</Table.Th>
+              <Table.Th className="text-center">Actions</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
             {filteredFiles.map((file: GroupFile) => (
               <Table.Tr key={`${file.fileType}-${file.id}`}>
-                <Table.Td>{file.id}</Table.Td>
-                <Table.Td>{file.name}</Table.Td>
-                <Table.Td>
+                <Table.Td className="text-center">{file.id}</Table.Td>
+                <Table.Td className="text-center">{file.name}</Table.Td>
+                <Table.Td className="text-center">
                   <Badge
                     variant="light"
                     color={file.fileType === "anonymous" ? "blue" : "red"}
@@ -398,8 +398,8 @@ export const GroupDetailModal = () => {
                     {file.fileType}
                   </Badge>
                 </Table.Td>
-                <Table.Td>{file.score.toFixed(4)}</Table.Td>
-                <Table.Td>
+                <Table.Td className="text-center">{file.score.toFixed(4)}</Table.Td>
+                <Table.Td className="text-center">
                   <Badge
                     variant="light"
                     color={file.isPublished ? "green" : "yellow"}
@@ -407,7 +407,7 @@ export const GroupDetailModal = () => {
                     {file.isPublished ? "Published" : "Draft"}
                   </Badge>
                 </Table.Td>
-                <Table.Td>
+                <Table.Td className="text-center" >
                   <Group gap="xs">
                     <ActionIcon
                       color="blue"

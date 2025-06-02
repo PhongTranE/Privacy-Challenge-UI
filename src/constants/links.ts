@@ -23,6 +23,7 @@ export const LINKS = {
 
   //Admin
   DASHBOARD: "/admin/dashboard",
+  STATUS: "/admin/status",
 
   //Profile
   PROFILE: "/me/profile",

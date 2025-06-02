@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import { LINKS } from "@/constants/links";
 import { IconMail } from "@tabler/icons-react";
 
-const RESEND_COOLDOWN = 60; // seconds
+const RESEND_COOLDOWN = 120; // seconds
 const MAX_RESEND_ATTEMPTS = 3;
 
 const ForgotPasswordPage: React.FC = () => {

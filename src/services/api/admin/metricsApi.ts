@@ -17,7 +17,6 @@ export const updateMetricParams = async (
   name: string, parameters: string
 ): Promise<MetricResponse> => {
   const response = await axiosInstance.patch(`/admin/metric/${name}/parameters`, { parameters });
-  console.log(response.data);
   return response.data;
 };
 
