@@ -27,6 +27,7 @@ import {
 } from "@/hooks/api/user/useSubmission";
 import { useNotify } from "@/hooks/useNotify";
 import { StatusBadge } from "@/components/StatusBadge";
+import { useCompetitionStatus } from "@/hooks/api/admin/useCompetition";
 
 const SubmissionPage: React.FC = () => {
   const { data: submissions, isLoading, error, refetch } = useSubmissionList();
@@ -34,6 +35,13 @@ const SubmissionPage: React.FC = () => {
     useUploadSubmission();
   const { mutate: togglePublish } = useTogglePublish();
   const { success, error: notifyError } = useNotify();
+
+  const { data: competitionStatus } = useCompetitionStatus();
+  const phase = competitionStatus?.data?.phase;
+  const isSetupPhase = phase === "setup";
+  const isPhaseEnded = phase === "finished_submission" || phase === "attack" || phase === "finished";
+  const isPaused = competitionStatus?.data?.isPaused;
+  const isSubmissionDisabled = isSetupPhase || isPhaseEnded || isPaused;
 
   const [file, setFile] = useState<File | null>(null);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
@@ -71,11 +79,7 @@ const SubmissionPage: React.FC = () => {
         setLoadingId(null);
         refetch();
       },
-      onError: (err: any) => {
-        notifyError(
-          "Error",
-          err?.response?.data?.message || "Failed to toggle publish status."
-        );
+      onError: () => {
         setLoadingId(null);
       },
     });
@@ -116,7 +120,7 @@ const SubmissionPage: React.FC = () => {
             title="Error"
             color="red"
           >
-            {error.message}
+            <Text c="white">{error.message}</Text>
           </Alert>
         </Container>
       </div>
@@ -130,8 +134,17 @@ const SubmissionPage: React.FC = () => {
           {/* Header */}
           <Group justify="space-between" align="flex-end">
             <Title order={2} fw={700} c="#ff8c00">
-              Submission Management
+              Submission Phase
             </Title>
+            {isSubmissionDisabled && (
+              <span style={{ color: '#ff8c00', fontWeight: 600, fontSize: 18 }}>
+                {isSetupPhase
+                  ? "Setup phase"
+                  : isPhaseEnded
+                  ? "Phase Ended"
+                  : "Phase Paused"}
+              </span>
+            )}
           </Group>
 
           {/* Upload Section */}
@@ -163,17 +176,26 @@ const SubmissionPage: React.FC = () => {
                   placeholder="Choose a ZIP file"
                   leftSection={<IconUpload size={16} />}
                   required
-                  disabled={getFileCount(false) + getFileCount(true) >= 20}
+                  disabled={getFileCount(false) + getFileCount(true) >= 20 || isSubmissionDisabled}
                 />
                 <Button
                   color="cyan"
                   onClick={handleFileUpload}
                   loading={isUploading}
-                  disabled={!file || isUploading}
+                  disabled={!file || isUploading || isSubmissionDisabled}
                 >
                   Upload
                 </Button>
               </Group>
+              {isSubmissionDisabled && (
+                <Text size="xs" c="#ff8c00" mt={4}>
+                  {isSetupPhase
+                    ? "Setup phase, submission is not available."
+                    : isPhaseEnded
+                    ? "Phase Ended, cannot upload file."
+                    : "Phase Paused, cannot upload file."}
+                </Text>
+              )}
             </Stack>
           </Card>
 
@@ -256,7 +278,7 @@ const SubmissionPage: React.FC = () => {
                           </Badge>
                         </Table.Td>
                         <Table.Td className="text-center">
-                          <Group gap="xs">
+                          <Group gap="xs" justify="center">
                             <Button
                               size="xs"
                               color="green"
@@ -265,6 +287,7 @@ const SubmissionPage: React.FC = () => {
                                 setConfirmationModalOpen(true);
                               }}
                               loading={loadingId === submission.id}
+                              disabled={isSubmissionDisabled}
                             >
                               {submission.isPublished ? "Unpublish" : "Publish"}
                             </Button>
@@ -288,6 +311,15 @@ const SubmissionPage: React.FC = () => {
                   )}
                 </Table.Tbody>
               </Table>
+              {isSubmissionDisabled && (
+                <Text size="xs" c="#ff8c00" mt={4}>
+                  {isSetupPhase
+                    ? "Setup phase, submission is not available."
+                    : isPhaseEnded
+                    ? "Phase Ended, cannot publish/unpublish file."
+                    : "Phase Paused, cannot publish/unpublish file."}
+                </Text>
+              )}
             </Stack>
           </Card>
         </Stack>
