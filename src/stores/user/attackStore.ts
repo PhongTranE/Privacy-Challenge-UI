@@ -1,0 +1,267 @@
+import { create } from "zustand";
+import {
+  AttackTeam,
+  PublishedFile,
+  AttackHistory,
+} from "@/types/api/responses/user/attackResponses";
+import {
+  fetchTeamsWithPublished,
+  fetchPublishedFiles,
+  fetchMyAttackScore,
+  fetchMyAttackHistory,
+} from "@/services/api/user/attackApi";
+
+interface AttackPhaseStoreState {
+  teams: AttackTeam[];
+  teamsLoading: boolean;
+  teamsError: string | null;
+
+  expandedTeamId: number | null;
+  filesByTeam: Record<number, PublishedFile[]>;
+  filesLoadingByTeam: Record<number, boolean>;
+  filesErrorByTeam: Record<number, string | null>;
+
+  expandedFileId: number | null;
+  attackScoreByFile: Record<number, number>;
+  attackScoreLoadingByFile: Record<number, boolean>;
+  attackScoreErrorByFile: Record<number, string | null>;
+
+  attackHistoryByFile: Record<number, AttackHistory[]>;
+  attackHistoryLoadingByFile: Record<number, boolean>;
+  attackHistoryErrorByFile: Record<number, string | null>;
+
+  setTeams: (teams: AttackTeam[]) => void;
+  setTeamsLoading: (loading: boolean) => void;
+  setTeamsError: (error: string | null) => void;
+
+  setExpandedTeamId: (teamId: number | null) => void;
+  setFilesByTeam: (teamId: number, files: PublishedFile[]) => void;
+  setFilesLoadingByTeam: (teamId: number, loading: boolean) => void;
+  setFilesErrorByTeam: (teamId: number, error: string | null) => void;
+
+  setExpandedFileId: (fileId: number | null) => void;
+  setAttackScoreByFile: (fileId: number, score: number) => void;
+  setAttackScoreLoadingByFile: (fileId: number, loading: boolean) => void;
+  setAttackScoreErrorByFile: (fileId: number, error: string | null) => void;
+
+  setAttackHistoryByFile: (fileId: number, history: AttackHistory[]) => void;
+  setAttackHistoryLoadingByFile: (fileId: number, loading: boolean) => void;
+  setAttackHistoryErrorByFile: (fileId: number, error: string | null) => void;
+
+  fetchTeams: () => Promise<void>;
+  fetchFilesByTeam: (teamId: number) => Promise<void>;
+  fetchAttackScoreByFile: (fileId: number) => Promise<void>;
+  fetchAttackHistoryByFile: (fileId: number) => Promise<void>;
+
+  reset: () => void;
+}
+
+export const useAttackPhaseStore = create<AttackPhaseStoreState>((set) => ({
+  teams: [],
+  teamsLoading: false,
+  teamsError: null,
+
+  expandedTeamId: null,
+  filesByTeam: {},
+  filesLoadingByTeam: {},
+  filesErrorByTeam: {},
+
+  expandedFileId: null,
+  attackScoreByFile: {},
+  attackScoreLoadingByFile: {},
+  attackScoreErrorByFile: {},
+
+  attackHistoryByFile: {},
+  attackHistoryLoadingByFile: {},
+  attackHistoryErrorByFile: {},
+
+  setTeams: (teams) => set({ teams }),
+  setTeamsLoading: (loading) => set({ teamsLoading: loading }),
+  setTeamsError: (error) => set({ teamsError: error }),
+
+  setExpandedTeamId: (teamId) => set({ expandedTeamId: teamId }),
+  setFilesByTeam: (teamId, files) =>
+    set((state) => ({
+      filesByTeam: {
+        ...state.filesByTeam,
+        [teamId]: Array.isArray(files) ? files : [],
+      },
+    })),
+  setFilesLoadingByTeam: (teamId, loading) =>
+    set((state) => ({
+      filesLoadingByTeam: { ...state.filesLoadingByTeam, [teamId]: loading },
+    })),
+  setFilesErrorByTeam: (teamId, error) =>
+    set((state) => ({
+      filesErrorByTeam: { ...state.filesErrorByTeam, [teamId]: error },
+    })),
+
+  setExpandedFileId: (fileId) => set({ expandedFileId: fileId }),
+  setAttackScoreByFile: (fileId, score) =>
+    set((state) => ({
+      attackScoreByFile: { ...state.attackScoreByFile, [fileId]: score },
+    })),
+  setAttackScoreLoadingByFile: (fileId, loading) =>
+    set((state) => ({
+      attackScoreLoadingByFile: {
+        ...state.attackScoreLoadingByFile,
+        [fileId]: loading,
+      },
+    })),
+  setAttackScoreErrorByFile: (fileId, error) =>
+    set((state) => ({
+      attackScoreErrorByFile: {
+        ...state.attackScoreErrorByFile,
+        [fileId]: error,
+      },
+    })),
+
+  setAttackHistoryByFile: (fileId, history) =>
+    set((state) => ({
+      attackHistoryByFile: {
+        ...state.attackHistoryByFile,
+        [fileId]: Array.isArray(history) ? history : [],
+      },
+    })),
+  setAttackHistoryLoadingByFile: (fileId, loading) =>
+    set((state) => ({
+      attackHistoryLoadingByFile: {
+        ...state.attackHistoryLoadingByFile,
+        [fileId]: loading,
+      },
+    })),
+  setAttackHistoryErrorByFile: (fileId, error) =>
+    set((state) => ({
+      attackHistoryErrorByFile: {
+        ...state.attackHistoryErrorByFile,
+        [fileId]: error,
+      },
+    })),
+
+  fetchTeams: async () => {
+    set({ teamsLoading: true, teamsError: null });
+    try {
+      const res = await fetchTeamsWithPublished();
+      set({ teams: res.data, teamsLoading: false });
+    } catch (e: any) {
+      set({
+        teamsError: e?.message || "Failed to fetch teams",
+        teamsLoading: false,
+      });
+    }
+  },
+  fetchFilesByTeam: async (teamId: number) => {
+    set((state) => ({
+      filesLoadingByTeam: { ...state.filesLoadingByTeam, [teamId]: true },
+      filesErrorByTeam: { ...state.filesErrorByTeam, [teamId]: null },
+    }));
+    try {
+      const res = await fetchPublishedFiles(teamId);
+      set((state) => ({
+        filesByTeam: {
+          ...state.filesByTeam,
+          [teamId]: Array.isArray(res.data) ? res.data : [],
+        },
+        filesLoadingByTeam: { ...state.filesLoadingByTeam, [teamId]: false },
+      }));
+    } catch (e: any) {
+      set((state) => ({
+        filesErrorByTeam: {
+          ...state.filesErrorByTeam,
+          [teamId]: e?.message || "Failed to fetch files",
+        },
+        filesLoadingByTeam: { ...state.filesLoadingByTeam, [teamId]: false },
+      }));
+    }
+  },
+  fetchAttackScoreByFile: async (fileId: number) => {
+    set((state) => ({
+      attackScoreLoadingByFile: {
+        ...state.attackScoreLoadingByFile,
+        [fileId]: true,
+      },
+      attackScoreErrorByFile: {
+        ...state.attackScoreErrorByFile,
+        [fileId]: null,
+      },
+    }));
+    try {
+      const res = await fetchMyAttackScore(fileId);
+      set((state) => ({
+        attackScoreByFile: {
+          ...state.attackScoreByFile,
+          [fileId]: res.data ?? 0,
+        },
+        attackScoreLoadingByFile: {
+          ...state.attackScoreLoadingByFile,
+          [fileId]: false,
+        },
+      }));
+    } catch (e: any) {
+      set((state) => ({
+        attackScoreErrorByFile: {
+          ...state.attackScoreErrorByFile,
+          [fileId]: e?.message || "Failed to fetch score",
+        },
+        attackScoreLoadingByFile: {
+          ...state.attackScoreLoadingByFile,
+          [fileId]: false,
+        },
+      }));
+    }
+  },
+  fetchAttackHistoryByFile: async (fileId: number) => {
+    set((state) => ({
+      attackHistoryLoadingByFile: {
+        ...state.attackHistoryLoadingByFile,
+        [fileId]: true,
+      },
+      attackHistoryErrorByFile: {
+        ...state.attackHistoryErrorByFile,
+        [fileId]: null,
+      },
+    }));
+    try {
+      const res = await fetchMyAttackHistory(fileId);
+      set((state) => ({
+        attackHistoryByFile: {
+          ...state.attackHistoryByFile,
+          [fileId]: Array.isArray(res.data) ? res.data : [],
+        },
+        attackHistoryLoadingByFile: {
+          ...state.attackHistoryLoadingByFile,
+          [fileId]: false,
+        },
+      }));
+    } catch (e: any) {
+      set((state) => ({
+        attackHistoryErrorByFile: {
+          ...state.attackHistoryErrorByFile,
+          [fileId]: e?.message || "Failed to fetch history",
+        },
+        attackHistoryLoadingByFile: {
+          ...state.attackHistoryLoadingByFile,
+          [fileId]: false,
+        },
+      }));
+    }
+  },
+
+  reset: () =>
+    set({
+      teams: [],
+      teamsLoading: false,
+      teamsError: null,
+      expandedTeamId: null,
+      filesByTeam: {},
+      filesLoadingByTeam: {},
+      filesErrorByTeam: {},
+      expandedFileId: null,
+      attackScoreByFile: {},
+      attackScoreLoadingByFile: {},
+      attackScoreErrorByFile: {},
+      attackHistoryByFile: {},
+      attackHistoryLoadingByFile: {},
+      attackHistoryErrorByFile: {},
+    }),
+}));
