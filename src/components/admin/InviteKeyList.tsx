@@ -5,6 +5,7 @@ import {
   useFetchInviteKeys,
 } from "@/hooks/api/admin/useInviteKeys";
 import { useNotify } from "@/hooks/useNotify";
+import { exportInviteKeys } from "@/services/api/admin/inviteKeyApi";
 import { useInviteKeyStore } from "@/stores/admin/inviteKeyStore";
 import { InviteKey } from "@/types/api/responses/admin/inviteKeyResponses";
 import {
@@ -19,6 +20,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import { IconAlertTriangle, IconCheck, IconTrash } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
@@ -30,7 +32,7 @@ const InviteKeyList = () => {
     currentPage,
     5
   );
-  const { success, error: showError } = useNotify();
+  const { success,error: showError } = useNotify();
   const { mutate: deleteSingleKey } = useDeleteInviteKey();
   const { mutateAsync: createKey } = useCreateInviteKey();
   const [deleteExpiredModalOpened, setDeleteExpiredModalOpened] =
@@ -72,11 +74,9 @@ const InviteKeyList = () => {
   // Khi xác nhận xóa
   const handleDeleteAllExpired = async () => {
     try {
-      const res = await deleteAllExpiredInviteKeys();
+      await deleteAllExpiredInviteKeys();
       await refetch();
       setDeleteExpiredModalOpened(false);
-      const message = res?.message as string;
-      success("Success", message || "Deleted expired invite keys.");
     } catch (err: any) {
       showError(err.message || "Failed to delete expired invite keys");
     }
@@ -123,6 +123,20 @@ const InviteKeyList = () => {
           disabled={isDeletingExpired}
         >
           Delete All Expired
+        </Button>
+        <Button
+          disabled={inviteKeys.length === 0}
+          color="blue"
+          onClick={async () => {
+            try {
+              await exportInviteKeys();
+              success("Success", "Export successful!");
+            } catch (e: any) {
+              showError(e.message || "Failed to export CSV");
+            }
+            }}
+        >
+          Export CSV
         </Button>
       </Group>
 

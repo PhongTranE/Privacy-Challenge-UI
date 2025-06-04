@@ -55,3 +55,21 @@ export const deleteAllExpiredInviteKeys = async (): Promise<
     );
   }
 };
+
+export const exportInviteKeys = async (): Promise<void> => {
+  const response = await axiosInstance.get("/admin/invite/export", {
+    responseType: "blob",
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to export CSV");
+  }
+
+  const blob = response.data;
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "invite_keys.csv";
+  a.click();
+  window.URL.revokeObjectURL(url);
+};
