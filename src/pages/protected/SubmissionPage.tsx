@@ -59,7 +59,9 @@ const SubmissionPage: React.FC = () => {
 
     uploadSubmission(file, {
       onSuccess: () => {
-        refetch();
+        setTimeout(() => {
+          refetch();
+        }, 5000);
         setFile(null);
       },
       onError: (err: any) => {
@@ -75,7 +77,6 @@ const SubmissionPage: React.FC = () => {
     setLoadingId(id);
     togglePublish(id, {
       onSuccess: () => {
-        success("Publish status updated!");
         setLoadingId(null);
         refetch();
       },
@@ -281,13 +282,15 @@ const SubmissionPage: React.FC = () => {
                           <Group gap="xs" justify="center">
                             <Button
                               size="xs"
-                              color="green"
+                              color={submission.isPublished ? "red" : "green"}
                               onClick={() => {
                                 setPendingActionId(submission.id);
                                 setConfirmationModalOpen(true);
                               }}
                               loading={loadingId === submission.id}
-                              disabled={isSubmissionDisabled}
+                              disabled={isSubmissionDisabled || (
+                                !submission.isPublished && getFileCount(true) >= 3
+                              )}
                             >
                               {submission.isPublished ? "Unpublish" : "Publish"}
                             </Button>
