@@ -14,6 +14,7 @@ import {
   Modal,
   FileInput,
   ActionIcon,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconUpload,
@@ -27,7 +28,8 @@ import {
 } from "@/hooks/api/user/useSubmission";
 import { useNotify } from "@/hooks/useNotify";
 import { StatusBadge } from "@/components/StatusBadge";
-import { useCompetitionStatus } from "@/hooks/api/admin/useCompetition";
+import { useCompetitionStatusUser } from "@/hooks/api/user/useCompetitionStatus";
+import { useAuthStore } from "@/stores/authStore";
 
 const SubmissionPage: React.FC = () => {
   const { data: submissions, isLoading, error, refetch } = useSubmissionList();
@@ -36,12 +38,12 @@ const SubmissionPage: React.FC = () => {
   const { mutate: togglePublish } = useTogglePublish();
   const { success, error: notifyError } = useNotify();
 
-  const { data: competitionStatus } = useCompetitionStatus();
+  const { data: competitionStatus, isLoading: isStatusLoading, error: statusError } = useCompetitionStatusUser();
   const phase = competitionStatus?.data?.phase;
-  const isSetupPhase = phase === "setup";
-  const isPhaseEnded = phase === "finished_submission" || phase === "attack" || phase === "finished";
   const isPaused = competitionStatus?.data?.isPaused;
-  const isSubmissionDisabled = isSetupPhase || isPhaseEnded || isPaused;
+  const isPhaseNotStarted = phase === "setup";
+  const isPhaseEnded = phase === "finished_submission" || phase === "attack" || phase === "finished";
+  const isSubmissionDisabled = isPhaseNotStarted || isPhaseEnded || isPaused;
 
   const [file, setFile] = useState<File | null>(null);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
@@ -49,6 +51,9 @@ const SubmissionPage: React.FC = () => {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [currentFile, setCurrentFile] = useState<any>(null);
   const [loadingId, setLoadingId] = useState<number | null>(null);
+
+  const user = useAuthStore((state) => state.user);
+  const isGroupBanned = user?.group?.isBanned;
 
   useEffect(() => {
     refetch();
@@ -61,7 +66,7 @@ const SubmissionPage: React.FC = () => {
       onSuccess: () => {
         setTimeout(() => {
           refetch();
-        }, 5000);
+        }, 1000);
         setFile(null);
       },
       onError: (err: any) => {
@@ -102,7 +107,7 @@ const SubmissionPage: React.FC = () => {
     );
   };
 
-  if (isLoading) {
+  if (isLoading || isStatusLoading) {
     return (
       <div className="min-h-screen bg-gray-900 text-white">
         <Container size="lg" pt={100}>
@@ -112,7 +117,7 @@ const SubmissionPage: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error || statusError) {
     return (
       <div className="min-h-screen bg-gray-900 text-white">
         <Container size="lg" pt={100}>
@@ -121,7 +126,7 @@ const SubmissionPage: React.FC = () => {
             title="Error"
             color="red"
           >
-            <Text c="white">{error.message}</Text>
+            <Text c="white">{error?.message || statusError?.message}</Text>
           </Alert>
         </Container>
       </div>
@@ -139,8 +144,8 @@ const SubmissionPage: React.FC = () => {
             </Title>
             {isSubmissionDisabled && (
               <span style={{ color: '#ff8c00', fontWeight: 600, fontSize: 18 }}>
-                {isSetupPhase
-                  ? "Setup phase"
+                {isPhaseNotStarted
+                  ? "Phase Not Started"
                   : isPhaseEnded
                   ? "Phase Ended"
                   : "Phase Paused"}
@@ -167,31 +172,45 @@ const SubmissionPage: React.FC = () => {
                 20 files. You have published {getFileCount(true)} / 3 files.
               </Text>
               <Group justify="space-between">
-                <FileInput
-                  clearable
-                  label="Select your anonymized file"
-                  accept=".zip"
-                  value={file}
-                  c="#fff"
-                  onChange={setFile}
-                  placeholder="Choose a ZIP file"
-                  leftSection={<IconUpload size={16} />}
-                  required
-                  disabled={getFileCount(false) + getFileCount(true) >= 20 || isSubmissionDisabled}
-                />
-                <Button
-                  color="cyan"
-                  onClick={handleFileUpload}
-                  loading={isUploading}
-                  disabled={!file || isUploading || isSubmissionDisabled}
+                <Tooltip
+                  label={isGroupBanned ? "Your group has been banned by admin, please contact admin." : ""}
+                  disabled={!isGroupBanned}
+                  withArrow
+                  color="red"
                 >
-                  Upload
-                </Button>
+                  <FileInput
+                    clearable
+                    label="Select your anonymized file"
+                    accept=".zip"
+                    value={file}
+                    c="#fff"
+                    onChange={setFile}
+                    placeholder="Choose a ZIP file"
+                    leftSection={<IconUpload size={16} />}
+                    required
+                    disabled={getFileCount(false) + getFileCount(true) >= 20 || isSubmissionDisabled || isGroupBanned}
+                  />
+                </Tooltip>
+                <Tooltip
+                  label={isGroupBanned ? "Your group has been banned by admin, please contact admin." : ""}
+                  disabled={!isGroupBanned}
+                  withArrow
+                  color="red"
+                >
+                  <Button
+                    color="cyan"
+                    onClick={handleFileUpload}
+                    loading={isUploading}
+                    disabled={!file || isUploading || isSubmissionDisabled || isGroupBanned}
+                  >
+                    Upload
+                  </Button>
+                </Tooltip>
               </Group>
               {isSubmissionDisabled && (
                 <Text size="xs" c="#ff8c00" mt={4}>
-                  {isSetupPhase
-                    ? "Setup phase, submission is not available."
+                  {isPhaseNotStarted
+                    ? "Phase not started, cannot upload file."
                     : isPhaseEnded
                     ? "Phase Ended, cannot upload file."
                     : "Phase Paused, cannot upload file."}
@@ -280,20 +299,25 @@ const SubmissionPage: React.FC = () => {
                         </Table.Td>
                         <Table.Td className="text-center">
                           <Group gap="xs" justify="center">
-                            <Button
-                              size="xs"
-                              color={submission.isPublished ? "red" : "green"}
-                              onClick={() => {
-                                setPendingActionId(submission.id);
-                                setConfirmationModalOpen(true);
-                              }}
-                              loading={loadingId === submission.id}
-                              disabled={isSubmissionDisabled || (
-                                !submission.isPublished && getFileCount(true) >= 3
-                              )}
+                            <Tooltip
+                              label={isGroupBanned ? "Your group has been banned by admin, please contact admin." : ""}
+                              disabled={!isGroupBanned}
+                              withArrow
+                              color="red"
                             >
-                              {submission.isPublished ? "Unpublish" : "Publish"}
-                            </Button>
+                              <Button
+                                size="xs"
+                                color={submission.isPublished ? "red" : "green"}
+                                onClick={() => {
+                                  setPendingActionId(submission.id);
+                                  setConfirmationModalOpen(true);
+                                }}
+                                loading={loadingId === submission.id}
+                                disabled={isSubmissionDisabled || isGroupBanned || (!submission.isPublished && getFileCount(true) >= 3)}
+                              >
+                                {submission.isPublished ? "Unpublish" : "Publish"}
+                              </Button>
+                            </Tooltip>
                             <ActionIcon
                               size="md"
                               color="cyan"
@@ -316,8 +340,8 @@ const SubmissionPage: React.FC = () => {
               </Table>
               {isSubmissionDisabled && (
                 <Text size="xs" c="#ff8c00" mt={4}>
-                  {isSetupPhase
-                    ? "Setup phase, submission is not available."
+                  {isPhaseNotStarted
+                    ? "Phase not started, cannot upload file."
                     : isPhaseEnded
                     ? "Phase Ended, cannot publish/unpublish file."
                     : "Phase Paused, cannot publish/unpublish file."}
