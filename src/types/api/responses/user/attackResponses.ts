@@ -1,7 +1,7 @@
 export interface AttackTeam {
     id: number;
     name: string;
-    num_published: number;
+    numPublished: number;
 }
 
 export interface PublishedFile {
@@ -15,3 +15,12 @@ export interface AttackHistory {
     file: string;
 }
 
+export interface MyAttackScore {
+    score: number;
+} 
+
+export interface AttackUploadResult {
+    id: number;
+    file: string;
+}
+  

@@ -3,12 +3,15 @@ import {
   AttackTeam,
   PublishedFile,
   AttackHistory,
+  MyAttackScore,
+  AttackUploadResult,
 } from "@/types/api/responses/user/attackResponses";
 import {
   fetchTeamsWithPublished,
   fetchPublishedFiles,
   fetchMyAttackScore,
   fetchMyAttackHistory,
+  uploadAttackFile,
 } from "@/services/api/user/attackApi";
 
 interface AttackPhaseStoreState {
@@ -30,6 +33,13 @@ interface AttackPhaseStoreState {
   attackHistoryLoadingByFile: Record<number, boolean>;
   attackHistoryErrorByFile: Record<number, string | null>;
 
+  // Upload attack file
+  uploadLoading: boolean;
+  uploadError: string | null;
+  uploadResult: AttackUploadResult | null;
+  fileUpload: Record<number, File | null>;
+  expandedDetailId: number | null;
+
   setTeams: (teams: AttackTeam[]) => void;
   setTeamsLoading: (loading: boolean) => void;
   setTeamsError: (error: string | null) => void;
@@ -48,10 +58,18 @@ interface AttackPhaseStoreState {
   setAttackHistoryLoadingByFile: (fileId: number, loading: boolean) => void;
   setAttackHistoryErrorByFile: (fileId: number, error: string | null) => void;
 
+  setUploadLoading: (loading: boolean) => void;
+  setUploadError: (error: string | null) => void;
+  setUploadResult: (result: AttackUploadResult | null) => void;
+
+  setFileUpload: (fileId: number, file: File | null) => void;
+  setExpandedDetailId: (fileId: number | null) => void;
+
   fetchTeams: () => Promise<void>;
   fetchFilesByTeam: (teamId: number) => Promise<void>;
   fetchAttackScoreByFile: (fileId: number) => Promise<void>;
   fetchAttackHistoryByFile: (fileId: number) => Promise<void>;
+  doUploadAttackFile: (anonymId: number, file: File) => Promise<void>;
 
   reset: () => void;
 }
@@ -74,6 +92,12 @@ export const useAttackPhaseStore = create<AttackPhaseStoreState>((set) => ({
   attackHistoryByFile: {},
   attackHistoryLoadingByFile: {},
   attackHistoryErrorByFile: {},
+
+  uploadLoading: false,
+  uploadError: null,
+  uploadResult: null,
+  fileUpload: {},
+  expandedDetailId: null,
 
   setTeams: (teams) => set({ teams }),
   setTeamsLoading: (loading) => set({ teamsLoading: loading }),
@@ -138,6 +162,12 @@ export const useAttackPhaseStore = create<AttackPhaseStoreState>((set) => ({
       },
     })),
 
+  setUploadLoading: (loading) => set({ uploadLoading: loading }),
+  setUploadError: (error) => set({ uploadError: error }),
+  setUploadResult: (result) => set({ uploadResult: result }),
+  setFileUpload: (fileId, file) => set((state) => ({ fileUpload: { ...state.fileUpload, [fileId]: file } })),
+  setExpandedDetailId: (fileId) => set({ expandedDetailId: fileId }),
+
   fetchTeams: async () => {
     set({ teamsLoading: true, teamsError: null });
     try {
@@ -190,7 +220,7 @@ export const useAttackPhaseStore = create<AttackPhaseStoreState>((set) => ({
       set((state) => ({
         attackScoreByFile: {
           ...state.attackScoreByFile,
-          [fileId]: res.data ?? 0,
+          [fileId]: res.data?.score ?? 0,
         },
         attackScoreLoadingByFile: {
           ...state.attackScoreLoadingByFile,
@@ -246,7 +276,20 @@ export const useAttackPhaseStore = create<AttackPhaseStoreState>((set) => ({
       }));
     }
   },
-
+  doUploadAttackFile: async (anonymId: number, file: File) => {
+    set({ uploadLoading: true, uploadError: null, uploadResult: null });
+    try {
+      const res = await uploadAttackFile(anonymId, file);
+      set({ uploadResult: res.data ?? null, uploadLoading: false });
+    } catch (e: any) {
+      set({
+        uploadError: e?.message || "Failed to upload attack file",
+        uploadLoading: false,
+        uploadResult: null,
+      });
+      throw e;
+    }
+  },
   reset: () =>
     set({
       teams: [],
@@ -263,5 +306,10 @@ export const useAttackPhaseStore = create<AttackPhaseStoreState>((set) => ({
       attackHistoryByFile: {},
       attackHistoryLoadingByFile: {},
       attackHistoryErrorByFile: {},
+      uploadLoading: false,
+      uploadError: null,
+      uploadResult: null,
+      fileUpload: {},
+      expandedDetailId: null,
     }),
 }));

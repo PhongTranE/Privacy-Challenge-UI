@@ -1,9 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   fetchTeamsWithPublished,
   fetchPublishedFiles,
   fetchMyAttackScore,
   fetchMyAttackHistory,
+  uploadAttackFile,
 } from '@/services/api/user/attackApi';
 
 // Lấy danh sách các team có file publish (trừ team mình)
@@ -38,5 +39,18 @@ export const useMyAttackHistory = (anonymId: number, enabled: boolean = true) =>
     queryKey: ['attack', 'my-attacks', anonymId],
     queryFn: () => fetchMyAttackHistory(anonymId),
     enabled: !!anonymId && enabled,
+  });
+};
+
+// Upload attack file
+export const useUploadAttackFile = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ anonymId, file }: { anonymId: number; file: File }) =>
+      uploadAttackFile(anonymId, file),
+    onSuccess: () => {
+      // Refetch các query liên quan nếu cần
+      queryClient.invalidateQueries({ queryKey: ['attack'] });
+    },
   });
 }; 
