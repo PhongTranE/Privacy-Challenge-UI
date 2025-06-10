@@ -136,6 +136,8 @@ export const useDeleteGroupFile = () => {
         success("Success", typeof res?.message === "string" ? res.message : "File deleted successfully!");
         queryClient.invalidateQueries({ queryKey: ["groupFiles"] });
         queryClient.invalidateQueries({ queryKey: ["groupDetailFull"] });
+        queryClient.invalidateQueries({ queryKey: ["groupStatistics"] });
+        queryClient.invalidateQueries({ queryKey: ["groupMembers"] });
     },
     onError: (err) => {
       error(err, "Cannot delete file!");

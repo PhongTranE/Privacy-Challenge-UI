@@ -410,7 +410,7 @@ export const GroupDetailModal = () => {
                   </Badge>
                 </Table.Td>
                 <Table.Td className="text-center" >
-                  <Group gap="xs">
+                  <Group gap="xs" justify="center">
                     <ActionIcon
                       color="blue"
                       variant="light"
@@ -440,11 +440,18 @@ export const GroupDetailModal = () => {
     
   );
 
+  const handleCloseModal = () => {
+    closeModal();
+    queryClient.invalidateQueries({ queryKey: ["groups"] });
+    queryClient.invalidateQueries({ queryKey: ["groupStatistics"] });
+    queryClient.invalidateQueries({ queryKey: ["groupMembers"] });
+  };
+
   return (
     <>
     <Modal
       opened={modalOpen}
-      onClose={closeModal}
+      onClose={handleCloseModal}
       title={
         <Text fw={700} size="lg" c="#ff8c00">
           Group Details
@@ -532,6 +539,8 @@ export const GroupDetailModal = () => {
         setConfirmDeleteModalOpen(false);
         queryClient.invalidateQueries({ queryKey: ["groupFiles"] });
         queryClient.invalidateQueries({ queryKey: ["groupDetailFull"] });
+        queryClient.invalidateQueries({ queryKey: ["groupStatistics"] });
+        queryClient.invalidateQueries({ queryKey: ["groupMembers"] });
       }}
     >
       Delete

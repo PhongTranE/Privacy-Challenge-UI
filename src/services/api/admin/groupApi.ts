@@ -77,7 +77,7 @@ export const downloadGroupFile = async (
     { responseType: 'blob' }
   );
   const contentDisposition = res.headers['content-disposition'];
-  downloadBlobFile(res.data, contentDisposition, "file_downloaded.zip");
+  downloadBlobFile(res.data, contentDisposition);
 };
 
 export const deleteGroupFile = async (

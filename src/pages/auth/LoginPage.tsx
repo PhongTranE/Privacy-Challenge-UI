@@ -31,22 +31,6 @@ const LoginPage: React.FC = () => {
 
   const { mutate: login, isPending, isSuccess } = useLogin();
   const navigate = useNavigate();
-
-  // const onSubmit = async (data: LoginInput) => {
-  //   try {
-  //     const response = await login(data);
-  //     if (response.data?.accessToken) {
-  //       setAccessToken(response.data.accessToken);
-  //     }
-  //     if (response.data?.user) {
-  //       authenticate(response.data.user);
-  //     }
-  //     // handleSuccess(response.message);
-  //     // navigate('/');
-  //   } catch (error) {
-  //     // handleError(error, ERROR_CONTEXTS.LOGIN);
-  //   }
-  // };
   const onSubmit = (data: LoginInput) => {
     login(data);
   };

@@ -231,13 +231,13 @@ export default function GroupManage() {
                       <Text>{group.memberCount}</Text>
                     </Table.Td>
                     <Table.Td className="text-center">
-                      <Badge color="blue">{group.defenseScore}</Badge>
+                      <Text c="blue">{group.defenseScore}</Text>
                     </Table.Td>
                     <Table.Td className="text-center">
-                      <Badge color="red">{group.attackScore}</Badge>
+                      <Text c="red">{group.attackScore}</Text>
                     </Table.Td>
                     <Table.Td className="text-center">
-                      <Badge color="green">{group.totalScore}</Badge>
+                      <Text c="green">{group.totalScore}</Text>
                     </Table.Td>
                     <Table.Td className="text-center">
                       <Group gap={4} justify="center">

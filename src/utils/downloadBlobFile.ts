@@ -1,21 +1,25 @@
 export const downloadBlobFile = (
   blob: Blob,
-  contentDisposition?: string,
-  fallbackFilename: string = 'file_downloaded.zip'
+  contentDisposition?: string
 ): void => {
-  let filename = fallbackFilename;
+  let filename = "";
 
   if (contentDisposition) {
-    const match = contentDisposition.match(/filename="?([^";]+)"?/);
+    const match = contentDisposition.match(/filename\*?=([^;\n]*)/i);
     if (match) {
-      filename = match[1];
+      let raw = match[1].trim();
+      if (raw.startsWith("UTF-8''")) {
+        raw = decodeURIComponent(raw.replace("UTF-8''", ''));
+      }
+      raw = raw.replace(/^"|"$/g, '');
+      if (raw) filename = raw;
     }
   }
 
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = filename;
+  if (filename) link.download = filename;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

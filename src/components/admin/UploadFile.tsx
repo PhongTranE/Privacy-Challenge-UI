@@ -204,12 +204,12 @@ export const UploadFile = () => {
       <Modal
         opened={showDuplicateModal}
         onClose={() => setShowDuplicateModal(false)}
-        title="File trùng tên"
+        title="File already exists"
         centered
       >
         <Text>
-          File <b>{duplicateFilename}</b> đã tồn tại. Bạn muốn thay thế file cũ
-          hay tự động đổi tên file mới?
+          File <b>{duplicateFilename}</b> already exists. Do you want to replace
+          the old file or automatically rename the new file?
         </Text>
         <Group mt="md">
           <Button
@@ -218,21 +218,21 @@ export const UploadFile = () => {
             loading={isResolvingDuplicate}
             disabled={isResolvingDuplicate}
           >
-            Thay thế
+            Replace
           </Button>
           <Button
             onClick={handleAutoRename}
             loading={isResolvingDuplicate}
             disabled={isResolvingDuplicate}
           >
-            Tự động đổi tên
+            Automatically rename
           </Button>
           <Button
             variant="default"
             onClick={() => setShowDuplicateModal(false)}
             disabled={isResolvingDuplicate}
           >
-            Hủy
+            Cancel
           </Button>
         </Group>
       </Modal>

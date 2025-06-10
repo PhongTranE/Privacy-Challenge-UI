@@ -16,5 +16,5 @@ export const downloadRawFile = async (): Promise<void> => {
     responseType: "blob",
   });
   const contentDisposition = res.headers["content-disposition"];
-  downloadBlobFile(res.data, contentDisposition, "rawfile.zip");
+  downloadBlobFile(res.data, contentDisposition);
 };

@@ -24,7 +24,8 @@ export const useUploadSubmission = () => {
       queryClient.invalidateQueries({ queryKey: ['submission', 'list'] });
     },
     onError: (err: any) => {
-      error('Error', err?.response?.data?.message || 'Failed to submit file');
+      // Throw from backend
+      // error('Error', err?.response?.data?.message || 'Failed to submit file');
     },
   });
 };
