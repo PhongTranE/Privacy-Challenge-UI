@@ -1,24 +1,16 @@
 import { useState } from "react";
 import { MultiSelect, Button, Flex, Text, Box, Container } from "@mantine/core";
+import { usePublicRanking } from "@/hooks/api/useRanking";
 
-const RankingFilter = () => {
+const RankingFilter = ({ onFilter }: { onFilter?: (teams: string[]) => void }) => {
+  const { data } = usePublicRanking();
+  const teamOptions = (data?.data || [])
+    .filter((team: any) => !!team?.teamName)
+    .map((team: any) => ({ value: team.teamName, label: team.teamName }));
   const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
 
-  const teamOptions = [
-    "Pig",
-    "APL",
-    "ABC",
-    "XYZ",
-    "123",
-    "456",
-    "343",
-    "789",
-    "DEF",
-    "GHI",
-  ].map((team) => ({ value: team, label: team }));
-
   const handleFilter = () => {
-    console.log("Filtered teams:", selectedTeams);
+    if (onFilter) onFilter(selectedTeams);
   };
 
   return (
@@ -46,7 +38,6 @@ const RankingFilter = () => {
               clearable
               hidePickedOptions
               nothingFoundMessage="No teams found"
-              // maxDropdownHeight={180}
               styles={{ dropdown: { maxHeight: 180, overflowY: "auto" } }}
               w={500}
             />

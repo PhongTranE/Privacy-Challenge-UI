@@ -1,86 +1,124 @@
-import { Table, Badge, Paper, Anchor, Container } from "@mantine/core";
+import { Table, Badge, Paper, Anchor, Container, Loader, Alert, Title } from "@mantine/core";
+import { usePublicRanking } from "@/hooks/api/useRanking";
+import { IconChevronUp, IconChevronDown } from "@tabler/icons-react";
+import { useState } from "react";
 
-const data = [
-  {
-    name: "APL",
-    defenseScore: "0%",
-    defenseRank: 2,
-    attackRating: "0.3002/2",
-    attackRank: 1,
-  },
-  {
-    name: "Pig",
-    defenseScore: "37.26%",
-    defenseRank: 1,
-    attackRating: "0/2",
-    attackRank: 2,
-  },
-  {
-    name: "ABC",
-    defenseScore: "0%",
-    defenseRank: 3,
-    attackRating: "0/2",
-    attackRank: 3,
-  },
-];
+interface RankingOverallProps {
+  filteredTeams?: string[];
+}
 
-function RankingOverall() {
+function RankingOverall({ filteredTeams }: RankingOverallProps) {
+  const { data, isLoading, error } = usePublicRanking();
+
+  // Sort state
+  const [sortBy, setSortBy] = useState<
+    "teamId" | "teamName" | "defenseScore" | "attackScore" | "totalScore"
+  >("totalScore");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+
+  let displayData = data?.data;
+  if (filteredTeams && filteredTeams.length > 0) {
+    displayData = displayData?.filter((team: any) => filteredTeams.includes(team.teamName));
+  }
+
+  // Sort logic
+  const sortedData = [...(displayData ?? [])]
+    .filter((team: any) => !!team.teamName)
+    .sort((a: any, b: any) => {
+      let aValue = a[sortBy];
+      let bValue = b[sortBy];
+      if (typeof aValue === "string") {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
+      }
+      if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+      return 0;
+    });
+
+  const handleSort = (column: typeof sortBy) => {
+    if (sortBy === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortDirection("asc");
+    }
+  };
+
+  // Tìm điểm defense và attack cao nhất
+  const maxDefense = Math.max(...sortedData.map((team: any) => team.defenseScore ?? 0));
+  const maxAttack = Math.max(...sortedData.map((team: any) => team.attackScore ?? 0));
+
+  if (isLoading) return <Loader />;
+  if (error) return <Alert color="red">Error loading ranking</Alert>;
+
   return (
     <Container size="lg" py="md">
       <Paper
         withBorder
-        p="sm"
-        radius="md"
-        style={{ borderColor: "#e08b3d94", backgroundColor: "#000",marginBottom: "80px" }}
+        p="md"
+        radius="lg"
+        style={{ borderColor: "#e08b3d94", background: "#18181b", marginBottom: "80px", boxShadow: "0 4px 32px #0008" }}
       >
-        <Table
-          highlightOnHover
-          withColumnBorders
-          verticalSpacing="sm"
-          horizontalSpacing="md"
-          fs="sm"
-        >
-          <thead style={{ backgroundColor: "#fa5252" }}>
-            <tr>
-              <th className="pl-10 text-left text-white">Overall result</th>
-              <th className="text-left text-white">Team Name</th>
-              <th className="text-left text-white">Defense Score</th>
-              <th className="text-left text-white">Attack Rating</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((team) => (
-              <tr className="border-b border-white/20" key={team.name}>
-                <td></td>
-                <td className="py-2">
-                  <Anchor
-                    href={`#${team.name.toLowerCase()}`}
-                    c="blue.3"
-                    underline="always"
-                  >
-                    {team.name}
-                  </Anchor>
-                </td>
-                <td style={{ color: "white" }}>
-                  {team.defenseScore}{" "}
-                  <Badge color="gray" size="sm" variant="filled">
-                    {team.defenseRank}
-                  </Badge>
-                </td>
-                <td style={{ color: "white" }}>
-                  {team.attackRating}{" "}
-                  <Badge
-                    color={team.attackRank === 1 ? "orange" : "gray"}
-                    size="sm"
-                    variant="filled"
-                  >
-                    {team.attackRank}
-                  </Badge>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Title order={2} className="text-orange-400 mb-6 text-center tracking-wide drop-shadow-lg">
+          Overall Results
+        </Title>
+        <div className="overflow-x-auto">
+          <Table
+            highlightOnHover
+            withColumnBorders
+            className="w-full bg-zinc-900 rounded-xl overflow-hidden shadow-lg text-white"
+            verticalSpacing="md"
+            horizontalSpacing="md"
+            fs="md"
+          >
+            <Table.Thead>
+              <Table.Tr className="bg-gradient-to-r from-zinc-800 to-zinc-700">
+                <Table.Th className="p-3 font-bold text-[15px] text-center text-orange-400 border-none cursor-pointer" onClick={() => handleSort("teamId")}>ID {sortBy === "teamId" && (sortDirection === "asc" ? <IconChevronUp size={16} className="inline" /> : <IconChevronDown size={16} className="inline" />)}</Table.Th>
+                <Table.Th className="p-3 font-bold text-[15px] text-center text-orange-400 border-none cursor-pointer" onClick={() => handleSort("teamName")}>Team Name {sortBy === "teamName" && (sortDirection === "asc" ? <IconChevronUp size={16} className="inline" /> : <IconChevronDown size={16} className="inline" />)}</Table.Th>
+                <Table.Th className="p-3 font-bold text-[15px] text-center text-orange-400 border-none cursor-pointer" onClick={() => handleSort("defenseScore")}>Defense Score {sortBy === "defenseScore" && (sortDirection === "asc" ? <IconChevronUp size={16} className="inline" /> : <IconChevronDown size={16} className="inline" />)}</Table.Th>
+                <Table.Th className="p-3 font-bold text-[15px] text-center text-orange-400 border-none cursor-pointer" onClick={() => handleSort("attackScore")}>Attack Score {sortBy === "attackScore" && (sortDirection === "asc" ? <IconChevronUp size={16} className="inline" /> : <IconChevronDown size={16} className="inline" />)}</Table.Th>
+                <Table.Th className="p-3 font-bold text-[15px] text-center text-orange-400 border-none cursor-pointer" onClick={() => handleSort("totalScore")}>Total Score {sortBy === "totalScore" && (sortDirection === "asc" ? <IconChevronUp size={16} className="inline" /> : <IconChevronDown size={16} className="inline" />)}</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {sortedData.map((team: any, idx: number) => (
+                <Table.Tr key={team.teamId} className="border-b border-zinc-800 hover:bg-zinc-800 transition-all">
+                  <Table.Td className="p-3 border-none text-center font-medium text-white">
+                    {team.teamId}
+                  </Table.Td>
+                  <Table.Td className="p-3 border-none text-center font-medium">
+                    <Anchor
+                      href={`#${team.teamName?.toLowerCase() || ""}`}
+                      c="blue.3"
+                      underline="always"
+                      className="hover:text-orange-400 transition-colors"
+                    >
+                      {team.teamName}
+                    </Anchor>
+                  </Table.Td>
+                  <Table.Td className="p-3 border-none text-center font-medium text-cyan-300">
+                    {team.defenseScore}
+                    {team.defenseScore === maxDefense && team.defenseScore !== 0 && (
+                      <Badge color="yellow" size="xs" variant="filled" ml={6} style={{ verticalAlign: 'middle' }}>1</Badge>
+                    )}
+                  </Table.Td>
+                  <Table.Td className="p-3 border-none text-center font-medium text-pink-300">
+                    {team.attackScore}
+                    {team.attackScore === maxAttack && team.attackScore !== 0 && (
+                      <Badge color="yellow" size="xs" variant="filled" ml={6} style={{ verticalAlign: 'middle' }}>1</Badge>
+                    )}
+                  </Table.Td>
+                  <Table.Td className="p-3 border-none text-center">
+                    <Badge color={idx === 0 ? "orange" : "gray"} size="md" variant="filled" radius="sm" style={{ fontWeight: 700, fontSize: 16 }}>
+                      {team.totalScore}
+                    </Badge>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </div>
       </Paper>
     </Container>
   );

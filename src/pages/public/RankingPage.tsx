@@ -4,8 +4,11 @@ import RankingOverall from "@/components/ranking/RankingOverall";
 import RankingSubmission from "@/components/ranking/RankingSubmission";
 import "@/styles/Pages/Public/RankingPage.scss";
 import { Text } from "@mantine/core";
+import { useState } from "react";
 
 const RankingPage: React.FC = () => {
+  const [filteredTeams, setFilteredTeams] = useState<string[]>([]);
+
   return (
     <>
       <main>
@@ -16,16 +19,16 @@ const RankingPage: React.FC = () => {
             </Text>
 
             {/* Ranking filter */}
-            <RankingFilter />
+            <RankingFilter onFilter={setFilteredTeams} />
 
             {/* Overall result */}
-            <RankingOverall />
+            <RankingOverall filteredTeams={filteredTeams} />
 
             {/* Submission */}
-            <RankingSubmission />
+            <RankingSubmission filteredTeams={filteredTeams} />
 
             {/* Attack */}
-            <RankingAttack />
+            <RankingAttack filteredTeams={filteredTeams} />
           </div>
         </section>
       </main>
