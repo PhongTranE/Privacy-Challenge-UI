@@ -1,3 +1,4 @@
+import { LINKS } from "@/constants/links";
 import { useResetPassword } from "@/hooks/api/auth/useResetPassword";
 import {
   ResetPasswordInput,
@@ -23,17 +24,25 @@ const ResetPasswordEmailPage: React.FC = () => {
     mode: "onTouched",
   });
 
-  const onSubmit = (data: ResetPasswordInput) => {
-    if (!resetToken) return;
+  const onSubmit = (data: { new_password: string }) => {
+    if (!resetToken) {
+      console.error("No reset token found!");
+      return;
+    }
+
     resetPassword(
       { token: resetToken, body: { new_password: data.new_password } },
       {
         onSuccess: () => {
-          navigate("/login");
+          navigate(LINKS.LOGIN);
+        },
+        onError: (error) => {
+          console.error("Reset password failed:", error);
         },
       }
     );
   };
+
   return (
     <>
       <Paper radius="md" p="xl" className="authen-form">
@@ -55,7 +64,7 @@ const ResetPasswordEmailPage: React.FC = () => {
               label="Confirm New Password"
               placeholder="•••••••••••••••"
               {...register("confirm_new_password", {
-                required: "Password is required",
+                required: "Confirm new password is required",
               })}
               error={errors.confirm_new_password?.message}
             />

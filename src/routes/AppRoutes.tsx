@@ -64,7 +64,7 @@ const AppRoutes: React.FC = () => {
               element={<ResendActivationPage />}
             />
             <Route path="activate" element={<ResultActivationPage />} />
-            <Route path="reset-password" element={<ResetPasswordEmailPage />} />
+            <Route path="reset-password/:resetToken" element={<ResetPasswordEmailPage />} />
           </Route>
         </Route>
 
