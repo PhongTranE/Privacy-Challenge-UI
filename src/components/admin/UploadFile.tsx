@@ -17,6 +17,7 @@ import { IconUpload, IconTrash, IconBolt } from "@tabler/icons-react";
 import { FileResponse } from "@/types/api/responses/admin/fileResponses";
 import { useEffect, useState } from "react";
 import { MAX_FILE_SIZE } from "@/utils/validations/fileValidation";
+import { useCompetitionStatus } from "@/hooks/api/admin/useCompetition";
 
 export const UploadFile = () => {
   const { handleUpload, isUploading } = useUploadFile();
@@ -36,6 +37,9 @@ export const UploadFile = () => {
     null
   );
   const [isResolvingDuplicate, setIsResolvingDuplicate] = useState(false);
+  const {data} = useCompetitionStatus();
+  const phase = data?.data?.phase;
+  const isFileActionAllowed = phase === "setup" || phase === "finished";
 
   useEffect(() => {
     fetchFiles();
@@ -122,14 +126,14 @@ export const UploadFile = () => {
             key={fileInputKey}
             onChange={handleFileChange}
             accept=".zip,application/zip"
-            disabled={isUploading}
+            disabled={isUploading || !isFileActionAllowed}
           >
             {(props) => (
               <Button
                 {...props}
                 leftSection={<IconUpload size={16} />}
                 loading={isUploading}
-                disabled={isUploading}
+                disabled={isUploading || !isFileActionAllowed}
               >
                 {isUploading ? "Uploading..." : "Upload ZIP File"}
               </Button>
@@ -181,7 +185,7 @@ export const UploadFile = () => {
                       onClick={() => handleActivate(file.id)}
                       title={file.isActive ? "Deactivate" : "Activate"}
                       loading={activatingFileId === file.id}
-                      disabled={isUploading || deletingFileId === file.id}
+                      disabled={isUploading || deletingFileId === file.id || !isFileActionAllowed}
                     >
                       <IconBolt size={16} />
                     </ActionIcon>
@@ -190,7 +194,7 @@ export const UploadFile = () => {
                       variant="subtle"
                       onClick={() => handleDelete(file.id)}
                       loading={deletingFileId === file.id}
-                      disabled={isUploading || activatingFileId === file.id}
+                      disabled={isUploading || activatingFileId === file.id || !isFileActionAllowed}
                     >
                       <IconTrash size={16} />
                     </ActionIcon>
