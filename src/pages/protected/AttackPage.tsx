@@ -201,8 +201,13 @@ const AttackPage: React.FC = () => {
                       cursor: "pointer",
                       border:
                         expandedTeamId === team.id
-                          ? "2px solid #00bcd4"
+                          ? "2px solid rgb(213, 173, 79)"
                           : undefined,
+                      background: 
+                        expandedTeamId === team.id
+                          ? "#ff8c00" 
+                          : undefined,
+                      transition: "all 0.2s"
                     }}
                   >
                     <Text fw={600}>{team.name}</Text>
@@ -213,7 +218,9 @@ const AttackPage: React.FC = () => {
             )}
             {expandedTeamId && (
               <Stack>
-                <Text fw={600}>Published files of team</Text>
+                <Text fw={600}>
+                  Published files of team: {teams.find((t) => t.id === expandedTeamId)?.name}
+                </Text>
                 {filesLoadingByTeam[expandedTeamId] && <Loader />}
                 {filesErrorByTeam[expandedTeamId] && (
                   <Alert color="red">{filesErrorByTeam[expandedTeamId]}</Alert>
@@ -300,7 +307,7 @@ const AttackPage: React.FC = () => {
                             </Tooltip>
                           </Table.Td>
                           <Table.Td className="p-3 border-none text-center">
-                            <Group gap={4}>
+                            <Group gap={4} justify="center">
                               <Tooltip
                                 label={
                                   isGroupBanned
@@ -315,9 +322,17 @@ const AttackPage: React.FC = () => {
                                   value={fileUpload[file.id] || null}
                                   onChange={(f) => setFileUpload(file.id, f)}
                                   disabled={uploadLoading || isGroupBanned}
-                                  style={{ width: 120 }}
+                                  style={{ width: 140 }}
                                   accept=".json"
                                   clearable
+                                  placeholder="Choose file"
+                                  classNames={{
+                                    input: "rounded-lg bg-zinc-900 text-white border border-zinc-700 focus:border-orange-500 transition-all px-3 py-2",
+                                    root: "w-44",
+                                  }}
+                                  styles={{
+                                    input: { minWidth: 0 },
+                                  }}
                                 />
                               </Tooltip>
                               <Tooltip
@@ -332,7 +347,6 @@ const AttackPage: React.FC = () => {
                               >
                                 <Button
                                   size="xs"
-                                  color="orange"
                                   loading={
                                     uploadLoading && selectedFileId === file.id
                                   }
@@ -343,6 +357,8 @@ const AttackPage: React.FC = () => {
                                     isPhaseNotStarted ||
                                     isGroupBanned
                                   }
+                                  className="font-semibold shadow-md transition-all bg-orange-600 hover:bg-orange-700 rounded-md"
+                                  style={{ minWidth: 80 }}
                                   onClick={async () => {
                                     setSelectedFileId(file.id);
                                     setSelectedFileName(file.name);
@@ -430,10 +446,10 @@ const AttackPage: React.FC = () => {
             >
               <Table.Thead>
                 <Table.Tr className="bg-gradient-to-r from-zinc-800 to-zinc-700">
-                  <Table.Th className="p-3 font-bold text-[15px] text-orange-500 border-none">
+                  <Table.Th className="text-center p-3 font-bold text-[15px] text-orange-500 border-none">
                     Attack ID
                   </Table.Th>
-                  <Table.Th className="p-3 font-bold text-[15px] text-orange-500 border-none">
+                  <Table.Th className="text-center p-3 font-bold text-[15px] text-orange-500 border-none">
                     Score
                   </Table.Th>
                 </Table.Tr>

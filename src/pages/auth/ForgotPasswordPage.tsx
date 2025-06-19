@@ -154,42 +154,86 @@ const ForgotPasswordPage: React.FC = () => {
       </Paper>
 
       <Modal
-        opened={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        title="Check your email"
-        centered
+  opened={showSuccessModal}
+  onClose={() => setShowSuccessModal(false)}
+  title="Check your email"
+  centered
+  size="md"
+  radius="lg"
+  overlayProps={{
+    backgroundOpacity: 0.55,
+    blur: 3,
+  }}
+  classNames={{
+    content: "!bg-gray-800 !border !border-gray-700 shadow-2xl",
+    header: "!bg-gray-800 !border-b !border-gray-700 !pb-4",
+    body: "!bg-gray-800 !p-6",
+    close: "!text-gray-400 hover:!text-gray-200 hover:!bg-gray-700 !transition-colors",
+    title: "!text-gray-100 !font-semibold !text-lg",
+  }}
+>
+  <Stack gap="lg" className="pt-2">
+    <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
+      <Text size="sm" className="!text-gray-300 leading-relaxed">
+        We've sent a password reset link to your email address. Please check
+        your inbox or spam folder.
+      </Text>
+    </div>
+
+    {resendCount >= MAX_RESEND_ATTEMPTS && (
+      <Alert 
+        color="yellow" 
+        mt="md"
+        variant="light"
+        className="!bg-yellow-500/10 !border !border-yellow-500/30"
+        classNames={{
+          message: "!text-yellow-200",
+          icon: "!text-yellow-400",
+        }}
       >
-        <Stack>
-          <Text size="sm">
-            We've sent a password reset link to your email address. Please check
-            your inbox or spam folder.
-          </Text>
+        <Text size="sm" className="!text-yellow-200">
+          You have reached the maximum number of resend attempts. Please try
+          again later.
+        </Text>
+      </Alert>
+    )}
 
-          {resendCount >= MAX_RESEND_ATTEMPTS && (
-            <Alert color="yellow" mt="md">
-              You have reached the maximum number of resend attempts. Please try
-              again later.
-            </Alert>
-          )}
+    <Group justify="space-between" mt="md" className="pt-2">
+      <Button
+        variant="light"
+        color="blue"
+        onClick={handleResend}
+        disabled={countdown > 0 || resendCount >= MAX_RESEND_ATTEMPTS}
+        className={`
+          !transition-all !duration-200
+          ${countdown > 0 || resendCount >= MAX_RESEND_ATTEMPTS
+            ? "!opacity-50 !cursor-not-allowed" 
+            : "hover:!bg-blue-500/20 hover:!scale-105"
+          }
+        `}
+      >
+        {countdown > 0 ? `Resend in ${countdown}s` : "Resend Email"}
+      </Button>
+      
+      <Button
+        component={Link}
+        to={LINKS.LOGIN}
+        onClick={() => setShowSuccessModal(false)}
+        variant="filled"
+        color="blue"
+        className="!bg-blue-600 hover:!bg-blue-700 !transition-all !duration-200 hover:!scale-105"
+      >
+        Return to Login
+      </Button>
+    </Group>
 
-          <Group justify="space-between" mt="md">
-            <Button
-              variant="light"
-              onClick={handleResend}
-              disabled={countdown > 0 || resendCount >= MAX_RESEND_ATTEMPTS}
-            >
-              {countdown > 0 ? `Resend in ${countdown}s` : "Resend Email"}
-            </Button>
-            <Button
-              component={Link}
-              to={LINKS.LOGIN}
-              onClick={() => setShowSuccessModal(false)}
-            >
-              Return to Login
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
+    <div className="flex items-center justify-center pt-2">
+      <Text size="xs" className="!text-gray-500">
+        Didn't receive an email? Check your spam folder or try again.
+      </Text>
+    </div>
+  </Stack>
+</Modal>
     </>
   );
 };

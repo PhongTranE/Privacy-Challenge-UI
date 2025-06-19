@@ -121,10 +121,18 @@ export default function MetricsAggregationManager() {
               key={agg.id}
               value={agg.name}
               label={agg.name}
-              className="text-white"
+              className="text-white hover:cursor-pointer"
               color="orange"
               size="md"
               disabled={isAggregationLocked}
+              styles={{
+                root: {
+                  cursor: isAggregationLocked ? 'not-allowed' : 'pointer',
+                },
+                label: {
+                  cursor: isAggregationLocked ? 'not-allowed' : 'pointer',
+                },
+              }}
             />
           ))}
         </Group>
@@ -164,6 +172,18 @@ export default function MetricsAggregationManager() {
                       )
                     }
                     disabled={isMetricsLocked}
+                    className="hover:cursor-pointer"
+                    styles={{
+                      root: {
+                        cursor: isMetricsLocked ? 'not-allowed' : 'pointer',
+                      },
+                      track: {
+                        cursor: isMetricsLocked ? 'not-allowed' : 'pointer',
+                      },
+                      thumb: {
+                        cursor: isMetricsLocked ? 'not-allowed' : 'pointer',
+                      },
+                    }}
                   />
                 </td>
                 <td>

@@ -208,7 +208,7 @@ const SubmissionPage: React.FC = () => {
                 </Tooltip>
               </Group>
               {isSubmissionDisabled && (
-                <Text size="xs" c="#ff8c00" mt={4}>
+                <Text size="xs" c="red" mt={4}>
                   {isPhaseNotStarted
                     ? "Phase not started, cannot upload file."
                     : isPhaseEnded
@@ -339,7 +339,7 @@ const SubmissionPage: React.FC = () => {
                 </Table.Tbody>
               </Table>
               {isSubmissionDisabled && (
-                <Text size="xs" c="#ff8c00" mt={4}>
+                <Text size="xs" c="red" mt={4}>
                   {isPhaseNotStarted
                     ? "Phase not started, cannot upload file."
                     : isPhaseEnded
