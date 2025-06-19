@@ -1,25 +1,24 @@
 import { Button, Stack, TextInput, Text, Title, Group } from "@mantine/core";
 import { useResendActivation } from "@/hooks/api/auth/useResendActivation";
-import { useNotify } from "@/hooks/useNotify";
 import { useAuthStore } from "@/stores/authStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
-import { IconLogout } from "@tabler/icons-react";
+import { IconLogout, IconMail } from "@tabler/icons-react";
 import { LINKS } from "@/constants/links";
 
 export default function ResendActivationPage() {
   const { mutate: resend, isPending } = useResendActivation();
-  const { error, success } = useNotify();
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const [emailSent, setEmailSent] = useState(false);
+  const [sentEmail, setSentEmail] = useState("");
 
   const form = useForm({
-    mode: "uncontrolled",
-    clearInputErrorOnChange: false,
+    mode: "controlled",
+    clearInputErrorOnChange: true,
     initialValues: {
       email: "",
-      termsOfService: false,
     },
 
     validate: {
@@ -38,24 +37,60 @@ export default function ResendActivationPage() {
   };
 
   const handleSubmit = (values: { email: string }) => {
+    setSentEmail(values.email);
     resend(values, {
-      onSuccess: (res) => {
-        if (typeof res.message === "string") {
-          success(res.message || "Sent!");
-        } else {
-          success("Sent!"); // fallback nếu res.message không phải string
-        }
+      onSuccess: () => {
+        setEmailSent(true);
       },
       onError: (err) => {
-        error(err);
+        //Handle by Backend
+        console.log(err);
       },
     });
   };
 
+  if (emailSent) {
+    return (
+      <Stack align="center" gap="md">        
+        <Title order={3}>Email Sent Successfully!</Title>
+        
+        <Text ta="center" size="sm" c="#ffffffb0">
+          We've sent an activation link to <strong>{sentEmail}</strong>
+        </Text>
+
+        <Text ta="center" size="sm" c="#ffffffb0">
+          Please check your email and click the activation link to verify your account.
+        </Text>
+
+        <Text ta="center" size="xs" c="#ffffff80">
+          Didn't receive the email? Check your spam folder.
+        </Text>
+
+        <Button
+          variant="subtle"
+          leftSection={<IconLogout size={16} />}
+          onClick={handleLogout}
+          mt="md"
+          size="sm"
+          color="gray"
+        >
+          Return to login
+        </Button>
+      </Stack>
+    );
+  }
+
   return (
-    <Stack align="center">
-      <Title order={3}>Resend Activation</Title>
-      <Text size="sm">Enter the email you used to register</Text>
+    <Stack align="center" gap="md">
+      <Title order={3}>Resend Activation Email</Title>
+      
+      <Text ta="center" size="sm" c="#ffffffb0">
+        Enter the email address you used to register your account.
+      </Text>
+
+      <Text ta="center" size="xs" c="#ffffff80">
+        We'll send you a new activation link to verify your account.
+      </Text>
 
       <form
         onSubmit={form.onSubmit(handleSubmit)}
@@ -63,20 +98,32 @@ export default function ResendActivationPage() {
       >
         <TextInput
           withAsterisk
-          label="Email"
+          label="Email Address"
           placeholder="email@example.com"
+          leftSection={<IconMail size="1rem" />}
           {...form.getInputProps("email")}
+          classNames={{
+            input: "bg-gray-800 text-white border-gray-600",
+            label: "text-gray-300",
+          }}
         />
-        <Button type="submit" mt="md" loading={isPending} fullWidth>
-          Resend Activation Email
+        
+        <Button 
+          type="submit" 
+          mt="md" 
+          loading={isPending} 
+          fullWidth
+          className="bg-blue-600 hover:bg-blue-700"
+        >
+          {isPending ? "Sending..." : "Send Activation Email"}
         </Button>
       </form>
-      <Group justify="flex-end" mt="md">
+
+      <Group justify="center" mt="md">
         <Button
           variant="subtle"
           leftSection={<IconLogout size={16} />}
           onClick={handleLogout}
-          mt="xs"
           size="sm"
           color="gray"
         >
