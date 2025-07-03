@@ -8,7 +8,7 @@ import { useLogin } from "@/hooks/api/auth/useLogin";
 import {
   Anchor,
   Button,
-  Divider,
+  // Divider,
   Group,
   Paper,
   PasswordInput,
@@ -17,7 +17,7 @@ import {
   TextInput,
   Checkbox,
 } from "@mantine/core";
-import { GoogleBtn } from "@/components/GoogleBtn";
+// import { GoogleBtn } from "@/components/GoogleBtn";
 
 const LoginPage: React.FC = () => {
   const {
@@ -47,12 +47,12 @@ const LoginPage: React.FC = () => {
         Log in to your account
       </Text>
 
-      <Group grow mb="md" mt="md">
-        <GoogleBtn radius="xl">Google</GoogleBtn>
+      {/* <Group grow mb="md" mt="md"> */}
+        {/* <GoogleBtn radius="xl">Google</GoogleBtn> */}
         {/* <TwitterButton radius="xl">Twitter</TwitterButton> */}
-      </Group>
+      {/* </Group> */}
 
-      <Divider label="Or continue with" labelPosition="center" my="lg" />
+      {/* <Divider label="Or continue with" labelPosition="center" my="lg" /> */}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>

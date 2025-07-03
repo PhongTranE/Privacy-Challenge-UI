@@ -36,7 +36,7 @@ const SubmissionPage: React.FC = () => {
   const { mutate: uploadSubmission, isPending: isUploading } =
     useUploadSubmission();
   const { mutate: togglePublish } = useTogglePublish();
-  const { success, error: notifyError } = useNotify();
+  const { error: notifyError } = useNotify();
 
   const { data: competitionStatus, isLoading: isStatusLoading, error: statusError } = useCompetitionStatusUser();
   const phase = competitionStatus?.data?.phase;
@@ -103,6 +103,14 @@ const SubmissionPage: React.FC = () => {
     return (
       submissions?.data?.filter(
         (submission) => submission.isPublished === published
+      ).length || 0
+    );
+  };
+
+  const getBlockedFileCount = () => {
+    return (
+      submissions?.data?.filter(
+        (submission) => !submission.isPublished && submission.naiveAttack === 1
       ).length || 0
     );
   };
@@ -241,6 +249,11 @@ const SubmissionPage: React.FC = () => {
                 <Badge color="green" variant="filled" size="lg">
                   Published: {getFileCount(true)}
                 </Badge>
+                {getBlockedFileCount() > 0 && (
+                  <Badge color="red" variant="filled" size="lg">
+                    Blocked: {getBlockedFileCount()}
+                  </Badge>
+                )}
               </Group>
               <Table verticalSpacing="sm">
                 <Table.Thead>
@@ -285,7 +298,23 @@ const SubmissionPage: React.FC = () => {
                           {submission.utility}
                         </Table.Td>
                         <Table.Td className="text-center text-white">
-                          {submission.naiveAttack}
+                          <Tooltip
+                            label={
+                              submission.naiveAttack === 1
+                                ? "Perfect naive attack score, your file is too weak to publish"
+                                : ""
+                            }
+                            disabled={submission.naiveAttack !== 1}
+                            withArrow
+                            color="red"
+                          >
+                            <Text
+                              c={submission.naiveAttack === 1 ? "red" : "white"}
+                              fw={submission.naiveAttack === 1 ? 700 : 400}
+                            >
+                              {submission.naiveAttack}
+                            </Text>
+                          </Tooltip>
                         </Table.Td>
                         <Table.Td className="text-center">
                           <Badge
@@ -300,10 +329,16 @@ const SubmissionPage: React.FC = () => {
                         <Table.Td className="text-center">
                           <Group gap="xs" justify="center">
                             <Tooltip
-                              label={isGroupBanned ? "Your group has been banned by admin, please contact admin." : ""}
-                              disabled={!isGroupBanned}
+                              label={
+                                isGroupBanned 
+                                  ? "Your group has been banned by admin, please contact admin."
+                                  : submission.naiveAttack === 1
+                                  ? "Perfect naive attack score, your file is too weak to publish"
+                                  : ""
+                              }
+                              disabled={!isGroupBanned && submission.naiveAttack !== 1}
                               withArrow
-                              color="red"
+                              color={isGroupBanned ? "red" : "orange"}
                             >
                               <Button
                                 size="xs"
@@ -313,7 +348,12 @@ const SubmissionPage: React.FC = () => {
                                   setConfirmationModalOpen(true);
                                 }}
                                 loading={loadingId === submission.id}
-                                disabled={isSubmissionDisabled || isGroupBanned || (!submission.isPublished && getFileCount(true) >= 3)}
+                                disabled={
+                                  isSubmissionDisabled || 
+                                  isGroupBanned || 
+                                  (!submission.isPublished && getFileCount(true) >= 3) ||
+                                  (!submission.isPublished && submission.naiveAttack === 1)
+                                }
                               >
                                 {submission.isPublished ? "Unpublish" : "Publish"}
                               </Button>

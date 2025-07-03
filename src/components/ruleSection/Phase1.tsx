@@ -18,7 +18,7 @@ const Phase1: React.FC = () => {
       </Title>
       <Text>
         During this first phase, the different teams will have to download the
-        biometric data provided and then anonymize it as best they can. The data
+        biometric data provided and then anonymize it as best they can. Example: The data
         burned correspond to the GPS positions of a hundred people over a period
         of 3 months.
       </Text>

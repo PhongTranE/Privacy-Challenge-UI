@@ -107,6 +107,22 @@ const AttackPage: React.FC = () => {
     fetchAttackHistoryByFile,
   ]);
 
+  // Fetch attack history when detail modal opens
+  useEffect(() => {
+    if (detailModalOpen && detailFileId) {
+      // Only fetch if we don't have the data yet
+      if (!attackHistoryByFile[detailFileId] && !attackHistoryLoadingByFile[detailFileId]) {
+        fetchAttackHistoryByFile(detailFileId);
+      }
+    }
+  }, [
+    detailModalOpen,
+    detailFileId,
+    attackHistoryByFile,
+    attackHistoryLoadingByFile,
+    fetchAttackHistoryByFile,
+  ]);
+
   // Reset modal khi đóng
   useEffect(() => {
     if (!modalOpen) {
@@ -386,21 +402,35 @@ const AttackPage: React.FC = () => {
                             </Group>
                           </Table.Td>
                           <Table.Td className="p-3 border-none text-center">
-                            {Array.isArray(attackHistoryByFile[file.id]) &&
-                              attackHistoryByFile[file.id].length > 0 && (
-                                <Button
-                                  size="xs"
-                                  variant="subtle"
-                                  color="cyan"
-                                  onClick={() => {
-                                    setDetailFileId(file.id);
-                                    setDetailFileName(file.name);
-                                    setDetailModalOpen(true);
-                                  }}
-                                >
-                                  Detail
-                                </Button>
-                              )}
+                            <Tooltip
+                              label={
+                                isGroupBanned
+                                  ? "Your group has been banned by admin, please contact admin."
+                                  : ""
+                              }
+                              disabled={!isGroupBanned}
+                              withArrow
+                              color="red"
+                            >
+                              <Button
+                                size="xs"
+                                variant="subtle"
+                                color="cyan"
+                                disabled={
+                                  isPhaseEnded ||
+                                  isPhaseNotStarted ||
+                                  isGroupBanned ||
+                                  attackHistoryLoadingByFile[file.id]
+                                }
+                                onClick={() => {
+                                  setDetailFileId(file.id);
+                                  setDetailFileName(file.name);
+                                  setDetailModalOpen(true);
+                                }}
+                              >
+                                Detail
+                              </Button>
+                            </Tooltip>
                           </Table.Td>
                         </Table.Tr>
                       ))}
@@ -439,41 +469,48 @@ const AttackPage: React.FC = () => {
                 {attackHistoryErrorByFile[detailFileId]}
               </Alert>
             )}
-            <Table
-              withColumnBorders
-              highlightOnHover
-              className="w-full bg-zinc-900 rounded-lg overflow-hidden shadow text-white"
-            >
-              <Table.Thead>
-                <Table.Tr className="bg-gradient-to-r from-zinc-800 to-zinc-700">
-                  <Table.Th className="text-center p-3 font-bold text-[15px] text-orange-500 border-none">
-                    Attack ID
-                  </Table.Th>
-                  <Table.Th className="text-center p-3 font-bold text-[15px] text-orange-500 border-none">
-                    Score
-                  </Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {(attackHistoryByFile[detailFileId] || []).map((h: any) => (
-                  <Table.Tr
-                    key={h.id}
-                    className="border-b border-zinc-800 hover:bg-zinc-800 transition-all"
+            {!attackHistoryLoadingByFile[detailFileId] && 
+             !attackHistoryErrorByFile[detailFileId] && (
+              <>
+                {Array.isArray(attackHistoryByFile[detailFileId]) &&
+                 attackHistoryByFile[detailFileId].length > 0 ? (
+                  <Table
+                    withColumnBorders
+                    highlightOnHover
+                    className="w-full bg-zinc-900 rounded-lg overflow-hidden shadow text-white"
                   >
-                    <Table.Td className="p-3 border-none text-center font-medium">
-                      {h.id}
-                    </Table.Td>
-                    <Table.Td className="p-3 border-none text-center font-medium">
-                      {h.score}
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
-            {(attackHistoryByFile[detailFileId] || []).length === 0 && (
-              <Text c="dimmed" size="sm">
-                No attack history yet.
-              </Text>
+                    <Table.Thead>
+                      <Table.Tr className="bg-gradient-to-r from-zinc-800 to-zinc-700">
+                        <Table.Th className="text-center p-3 font-bold text-[15px] text-orange-500 border-none">
+                          Attack ID
+                        </Table.Th>
+                        <Table.Th className="text-center p-3 font-bold text-[15px] text-orange-500 border-none">
+                          Score
+                        </Table.Th>
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                      {(attackHistoryByFile[detailFileId] || []).map((h: any) => (
+                        <Table.Tr
+                          key={h.id}
+                          className="border-b border-zinc-800 hover:bg-zinc-800 transition-all"
+                        >
+                          <Table.Td className="p-3 border-none text-center font-medium">
+                            {h.id}
+                          </Table.Td>
+                          <Table.Td className="p-3 border-none text-center font-medium">
+                            {h.score}
+                          </Table.Td>
+                        </Table.Tr>
+                      ))}
+                    </Table.Tbody>
+                  </Table>
+                ) : (
+                  <Text c="dimmed" size="sm">
+                    No attack history yet.
+                  </Text>
+                )}
+              </>
             )}
           </>
         )}
